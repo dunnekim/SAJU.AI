@@ -157,6 +157,40 @@
 
       <!-- 입력 폼 카드 -->
       <section class="bg-white rounded-2xl shadow-sm mb-8 p-6 md:p-8">
+        <!-- 탭 메뉴 -->
+        <div class="flex gap-2 mb-6 p-1 bg-gray-100 rounded-xl" role="tablist">
+          <button 
+            type="button"
+            id="tabGeneral"
+            data-mode="general"
+            class="tab-btn flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all active"
+            role="tab"
+            aria-selected="true"
+          >
+            📊 종합 분석
+          </button>
+          <button 
+            type="button"
+            id="tabCompatibility"
+            data-mode="compatibility"
+            class="tab-btn flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all"
+            role="tab"
+            aria-selected="false"
+          >
+            💖 궁합 분석
+          </button>
+          <button 
+            type="button"
+            id="tabCareer"
+            data-mode="career"
+            class="tab-btn flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all"
+            role="tab"
+            aria-selected="false"
+          >
+            💼 이직·커리어
+          </button>
+        </div>
+
         <div class="mb-6">
           <h2 class="text-xl font-bold text-saju-text mb-2">생년월일 입력</h2>
           <p class="text-sm text-gray-500">정확한 분석을 위해 출생 정보를 입력해주세요</p>

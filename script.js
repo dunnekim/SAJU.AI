@@ -581,6 +581,8 @@ function renderMarkdown(md) {
   // 결과 영역 초기화
   resultEl.innerHTML = '';
   
+  let cardIndex = 0; // 실제 렌더링된 카드 수 추적
+  
   sections.forEach((section, index) => {
     const trimmed = section.trim();
     if (!trimmed || !trimmed.startsWith('##')) {
@@ -597,10 +599,14 @@ function renderMarkdown(md) {
     const card = document.createElement('div');
     card.className = 'section-card';
     
-    // 제목 생성 (Tailwind 클래스 직접 적용)
+    // 제목 생성 (Tailwind 클래스 직접 적용) - 첫 카드는 mt-0, 나머지는 mt-12
     const titleEl = document.createElement('h2');
-    titleEl.className = 'text-xl font-bold text-saju-accent mb-4';
+    titleEl.className = cardIndex === 0 
+      ? 'text-2xl font-bold text-gray-900 mb-4'
+      : 'text-2xl font-bold text-gray-900 mt-12 mb-4';
     titleEl.textContent = titleLine;
+    
+    cardIndex++;
     
     // 본문 생성 (Markdown 파싱)
     const bodyEl = document.createElement('div');
