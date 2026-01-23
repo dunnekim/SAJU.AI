@@ -1,8 +1,17 @@
 import { Solar } from "lunar-javascript";
 
-// ⚠️ API 키 설정 (GitHub Pages 배포용)
-// 아래 빈 문자열에 본인의 OpenAI API 키를 직접 넣으세요
-const OPENAI_API_KEY = "";
+// LocalStorage에서 API 키 관리
+function getApiKey() {
+  return localStorage.getItem('openai_api_key') || '';
+}
+
+function setApiKey(key) {
+  localStorage.setItem('openai_api_key', key.trim());
+}
+
+function clearApiKey() {
+  localStorage.removeItem('openai_api_key');
+}
 
 // 냉정하고 구조적인 심리 분석 프롬프트
 const systemInstruction = `
@@ -281,8 +290,9 @@ export function calculateSaju(year, month, day, hour, minute) {
 
 // Step 3. 해석 레이어
 export async function analyzeSaju({ sajuJson }) {
-  if (!OPENAI_API_KEY) {
-    throw new Error("API 키가 설정되지 않았습니다. script.js 파일 상단의 OPENAI_API_KEY를 설정하세요.");
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error("API 키가 설정되지 않았습니다. 페이지를 새로고침하여 키를 입력하세요.");
   }
 
   const userPrompt = [
@@ -302,7 +312,7 @@ export async function analyzeSaju({ sajuJson }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
@@ -403,8 +413,72 @@ function parseBirthdate(yymmdd) {
   return { year: yyyy, month: mm, day: dd };
 }
 
+// API Key 모달 관리
+function initApiKeyModal() {
+  const modal = document.getElementById('apiKeyModal');
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const saveKeyBtn = document.getElementById('saveKeyBtn');
+  const changeKeyBtn = document.getElementById('changeKeyBtn');
+
+  // 페이지 로드 시 키 확인
+  const existingKey = getApiKey();
+  if (!existingKey) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  } else {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    if (changeKeyBtn) {
+      changeKeyBtn.classList.remove('hidden');
+    }
+  }
+
+  // 키 저장
+  if (saveKeyBtn) {
+    saveKeyBtn.addEventListener('click', () => {
+      const key = apiKeyInput.value.trim();
+      if (!key) {
+        alert('API 키를 입력해주세요.');
+        return;
+      }
+      if (!key.startsWith('sk-')) {
+        alert('올바른 OpenAI API 키 형식이 아닙니다. (sk-로 시작해야 합니다)');
+        return;
+      }
+      setApiKey(key);
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      if (changeKeyBtn) {
+        changeKeyBtn.classList.remove('hidden');
+      }
+      apiKeyInput.value = '';
+      location.reload(); // 페이지 새로고침
+    });
+  }
+
+  // Enter 키로도 저장 가능
+  if (apiKeyInput) {
+    apiKeyInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        saveKeyBtn.click();
+      }
+    });
+  }
+
+  // 키 변경 버튼
+  if (changeKeyBtn) {
+    changeKeyBtn.addEventListener('click', () => {
+      clearApiKey();
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      changeKeyBtn.classList.add('hidden');
+    });
+  }
+}
+
 if (form) {
-  // 기본값 설정 불필요 (셀렉트박스는 사용자가 선택)
+  // API Key 모달 초기화
+  initApiKeyModal();
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
