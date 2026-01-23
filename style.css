@@ -34,27 +34,56 @@ html, body {
   font-weight: 600;
 }
 
+/* 섹션 카드 스타일 (독립적인 네모 칸) */
+.section-card {
+  background: #FFFFFF;
+  border: 2px solid #F3F4F6;
+  border-radius: 1.25rem;
+  padding: 2.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.section-card:hover {
+  border-color: rgba(255, 107, 80, 0.25);
+  box-shadow: 0 4px 16px rgba(255, 107, 80, 0.08);
+}
+
+.section-card:last-child {
+  margin-bottom: 0;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 640px) {
+  .section-card {
+    padding: 1.75rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+  }
+  
+  .section-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
 /* Markdown 결과 타이포그래피 커스텀 - 프리미엄 사주앱 스타일 */
 #result h1 {
   font-size: 1.75rem;
   font-weight: 700;
-  margin: 3rem 0 1.5rem;
+  margin: 0 0 1.5rem 0;
   color: #2D2D2D;
 }
 
-#result h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 3rem 0 1.5rem;
+.section-card h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0 0 2rem 0;
   color: #2D2D2D;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255, 107, 80, 0.15);
-}
-
-#result h2:first-child {
-  margin-top: 0;
-  border-top: none;
-  padding-top: 0;
+  padding: 0;
+  border: none;
+  letter-spacing: -0.02em;
 }
 
 #result h3 {
@@ -64,7 +93,7 @@ html, body {
   color: #4B5563;
 }
 
-#result p {
+.section-card p {
   line-height: 2.2;
   margin: 1.5rem 0;
   color: #374151;
@@ -72,8 +101,16 @@ html, body {
 }
 
 /* 연속 문단 간격 대폭 확대 (가독성) */
-#result p + p {
+.section-card p + p {
   margin-top: 2rem;
+}
+
+.section-card p:first-of-type {
+  margin-top: 0;
+}
+
+.section-card p:last-child {
+  margin-bottom: 0;
 }
 
 #result strong {
