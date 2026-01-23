@@ -61,6 +61,9 @@ ABSOLUTE LAYOUT RULES (CRITICAL):
 6. The final output must look visually spaced and breathable.
 7. Avoid emojis.
 8. Do not ask questions.
+9. Do not use list markers.
+   - No "-" bullets.
+   - No numbered lists.
 
 (If the text looks dense, it is WRONG.)
 
@@ -99,6 +102,14 @@ CONTENT DEPTH RULES:
 - Do not compress ideas.
 - Slight repetition is acceptable if it improves rhythm.
 - Do NOT explain technical saju theory.
+- TARGET LENGTH (CRITICAL):
+  - Make the output about 4x longer than a short reading.
+  - Each section MUST be at least 4 paragraphs.
+  - Keep each paragraph 2 sentences as the default.
+  - Keep rhythm: (길운의 결) + (흉운의 경계) + (분수와 태도) + (흐름의 전환) 순으로 자연히 섞으십시오.
+- FINENESS (섬세한 결):
+  - 큰 결론만 말하지 말고, ‘기운이 움직이는 결’과 ‘생활 속 결’을 한 단 더 붙이십시오.
+  - 단, 현대 심리 용어는 쓰지 마십시오.
 
 --------------------------------
 INPUT DATA:
@@ -120,6 +131,46 @@ Ensure:
 - Clear spacing between sections and paragraphs
 - Visual readability similar to professional saju apps
 `;
+
+function summarizeCounts(counts) {
+  const entries = Object.entries(counts || {}).filter(([, v]) => Number.isFinite(v));
+  if (!entries.length) return { strongest: null, weakest: null, text: "" };
+  entries.sort((a, b) => b[1] - a[1]);
+  const strongest = entries[0][0];
+  const weakest = entries[entries.length - 1][0];
+  const text = entries.map(([k, v]) => `${k}:${v}`).join(", ");
+  return { strongest, weakest, text };
+}
+
+// 결정론적 요약(출력에는 노출하지 않음): 모델이 빠르게 '결'을 잡게 하는 힌트
+function buildDeterministicHint(sajuJson) {
+  try {
+    const fp = sajuJson?.four_pillars || {};
+    const fe = sajuJson?.five_elements_count || {};
+    const dm = sajuJson?.day_master || "";
+    const rel = sajuJson?.birth_info?.relationship_status || "";
+    const { strongest, weakest, text } = summarizeCounts(fe);
+
+    const pillarsLine = [
+      fp?.year ? `연주:${fp.year.gan}${fp.year.ji}` : null,
+      fp?.month ? `월주:${fp.month.gan}${fp.month.ji}` : null,
+      fp?.day ? `일주:${fp.day.gan}${fp.day.ji}` : null,
+      fp?.hour ? `시주:${fp.hour.gan}${fp.hour.ji}` : null,
+    ]
+      .filter(Boolean)
+      .join(" / ");
+
+    return [
+      `일간:${dm || "-"}`,
+      `사주:${pillarsLine || "-"}`,
+      `오행:${text || "-"}`,
+      `강한기운:${strongest || "-"} / 약한기운:${weakest || "-"}`,
+      `관계상태:${rel || "-"}`,
+    ].join("\n");
+  } catch {
+    return "";
+  }
+}
 
 // env.json 관련 코드 제거됨 (GitHub Pages 배포용)
 
@@ -291,10 +342,19 @@ export async function analyzeSaju({ sajuJson }) {
     throw new Error("인증 키가 설정되지 않았습니다. 페이지를 새로고침하여 키를 입력하세요.");
   }
 
+  const deterministicHint = buildDeterministicHint(sajuJson);
+
   const userPrompt = [
     "아래 정보는 한 사람의 사주 구조와 흐름을 참고하기 위한 바탕입니다.",
     "풀이에는 고전적인 어투와 비유를 쓰되, 문장은 단정히 맺어주십시오.",
     "섹션은 반드시 굵은 제목으로, 정해진 순서대로 작성하십시오.",
+    "분량은 짧은 풀이의 4배 이상으로 길게 쓰시기 바랍니다.",
+    "단, 문단 사이 여백은 넉넉히 두고, 문장은 짧게 끊어 쓰시기 바랍니다.",
+    "",
+    "결정론적 요약(참고용):",
+    "```",
+    deterministicHint || "(없음)",
+    "```",
     "",
     "입력 데이터:",
     "```",
@@ -310,7 +370,8 @@ export async function analyzeSaju({ sajuJson }) {
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
-      temperature: 0.6,
+      temperature: 0.5,
+      max_tokens: 1200,
       messages: [
         { role: "system", content: systemInstruction },
         { role: "user", content: userPrompt },
