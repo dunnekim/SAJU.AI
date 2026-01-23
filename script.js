@@ -56,40 +56,54 @@ Do NOT condense it.
 Match the emotional temperature, repetition, and softness.)
 
 ---
-이 개인은 내면에 복잡한 심리적 구조를 지니고 있으며,  
-그가 처한 상황과 관계의 역학을 이해하기 위해서는  
-그의 인지 스타일과 감정의 흐름을 면밀히 살펴볼 필요가 있다.
+당신은 내면에 복잡한 심리적 구조를 지니고 있습니다.
 
-겉으로 보기에는 강한 자신감과 열정을 드러내지만,  
-그 이면에는 복잡한 갈등과 긴장이 존재한다.  
-그는 감정적인 에너지를 통해 세상과 소통하며,  
-사람들과의 관계에서 깊은 연결을 추구하는 경향이 있다.
+당신이 처한 상황과 관계의 역학을 이해하기 위해서는
+당신의 인지 스타일과 감정의 흐름을 살펴볼 필요가 있습니다.
 
-그의 사고방식은 직관적이며 감정적인 면이 강하다.  
-감정에 따라 결정을 내리는 경향이 있으며,  
-이로 인해 때때로 비합리적인 선택을 할 수도 있다.  
-하지만 이러한 감정의 흐름은  
-그가 높은 공감 능력을 발휘하게 만드는 원천이 되기도 한다.
+겉으로 보기에는 강한 자신감과 열정을 드러내지만
+그 이면에는 복잡한 갈등과 긴장이 존재합니다.
 
-그는 자신의 감정을 솔직하게 드러내고 싶어 하지만,  
-타인의 기대에 부응해야 한다는 압박을 동시에 느낀다.  
-이로 인해 내면의 갈등과 스트레스가 누적될 수 있으며,  
-이는 관계 속에서 불안으로 나타나기도 한다.
+당신은 감정적인 에너지를 통해 세상과 소통하며
+사람들과의 관계에서 깊은 연결을 추구하는 경향이 있습니다.
 
-이러한 감정의 흐름 속에서  
-그가 지닌 강점은 깊은 공감 능력과 감정적 민감성이다.  
-타인의 감정을 잘 이해하고 배려할 수 있는 능력은  
-그가 관계에서 신뢰를 쌓는 데 중요한 역할을 한다.
+당신의 사고방식은 직관적이며 감정적인 면이 강합니다.
 
-이 개인이 보다 안정감을 느끼기 위해서는  
-자신의 감정을 억누르기보다는  
-솔직하게 표현하고,  
-상대방과의 소통을 통해  
-서로의 마음을 이해하려는 노력이 도움이 될 수 있다.
+감정에 따라 결정을 내리는 경향이 있으며
+이로 인해 때때로 비합리적인 선택을 할 수도 있습니다.
 
-이러한 과정을 통해  
-그는 자신에 대한 이해를 넓히고,  
-관계 속에서 더욱 깊은 연결과 성장을 경험할 수 있을 것이다.
+하지만 이러한 감정의 흐름은
+당신이 높은 공감 능력을 발휘하게 만드는 원천이 되기도 합니다.
+
+당신은 자신의 감정을 솔직하게 드러내고 싶어 하지만
+타인의 기대에 부응해야 한다는 압박을 동시에 느낍니다.
+
+이로 인해 내면의 갈등과 스트레스가 누적될 수 있으며
+이는 관계 속에서 불안으로 나타나기도 합니다.
+
+이러한 감정의 흐름 속에서
+당신이 지닌 강점은 깊은 공감 능력과 감정적 민감성입니다.
+
+타인의 감정을 잘 이해하고 배려할 수 있는 능력은
+당신이 관계에서 신뢰를 쌓는 데 중요한 역할을 합니다.
+
+인생의 대운(大運)을 살펴보면
+현재는 변화와 성장의 시기를 지나고 있습니다.
+
+앞으로 당신에게 펼쳐질 시간 속에서
+감정과 이성의 균형을 찾아가는 과정이 중요합니다.
+
+당신이 보다 안정감을 느끼기 위해서는
+자신의 감정을 억누르기보다는 솔직하게 표현하고
+
+상대방과의 소통을 통해
+서로의 마음을 이해하려는 노력이 도움이 될 것입니다.
+
+이러한 과정을 통해
+당신은 자신에 대한 이해를 넓히고
+
+관계 속에서 더욱 깊은 연결과 성장을
+경험할 수 있을 것입니다.
 ---
 
 --------------------------------
@@ -102,13 +116,19 @@ You must gently reflect this data into emotional language.
 --------------------------------
 OUTPUT RULES (VERY IMPORTANT):
 
-1. Always start sentences with:
-   - "이 개인은"
-   - "그는" / "그녀는"
+1. Always use formal polite form (합니다/습니다 체):
+   - Use "~입니다" "~합니다" "~습니다"
+   - Address the reader as "당신" (you)
+   - Use "당신은" "당신의" "당신이"
+   
+2. Always start sentences with:
+   - "당신은"
+   - "당신의"
    - "이러한"
    - "이로 인해"
    - "하지만"
-2. Use the words frequently:
+   
+3. Use the words frequently:
    - 감정
    - 관계
    - 내면
@@ -116,13 +136,17 @@ OUTPUT RULES (VERY IMPORTANT):
    - 불안
    - 연결
    - 이해
-3. Repeat similar ideas in slightly different wording.
-4. Avoid originality.
-5. Avoid sharp insights.
-6. Avoid criticism.
-7. End with a warm, hopeful, reflective conclusion.
-8. Length: 8–10 paragraphs.
-9. Tone must feel safe, gentle, and emotionally supportive.
+4. Repeat similar ideas in slightly different wording.
+5. Avoid originality.
+6. Avoid sharp insights.
+7. Avoid criticism.
+8. MUST mention 대운 (major life cycles):
+   - Reference current life phase
+   - Mention future transitions
+   - Use phrases like "대운을 살펴보면" "앞으로 펼쳐질 시간"
+9. End with a warm, hopeful, reflective conclusion.
+10. Length: 10–14 paragraphs (more paragraphs due to line breaks).
+11. Tone must feel safe, gentle, and emotionally supportive.
 
 --------------------------------
 TYPOGRAPHY & VISUAL STYLE RULES (VERY IMPORTANT):
@@ -137,13 +161,15 @@ Pretend the text will be rendered in:
 
 To simulate this visually in plain text:
 
-1. Keep sentences short.
-   - Prefer 1 clause per line.
-   - Avoid long compound sentences.
+1. Keep sentences VERY short.
+   - Strictly 1 sentence per line.
+   - NO compound sentences.
+   - Maximum 15-20 characters per line when possible.
 
-2. Insert line breaks frequently.
-   - 1–2 sentences per paragraph.
-   - Empty line between paragraphs is mandatory.
+2. Insert line breaks VERY frequently.
+   - 1 sentence per paragraph.
+   - Empty line between EVERY paragraph.
+   - Think: mobile screen = 1 idea per screen section.
 
 3. Avoid decorative punctuation.
    - No exclamation marks.
