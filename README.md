@@ -16,31 +16,24 @@
 
 ## 🚀 실행 방법
 
-### 1. API Key 설정 (.env)
+### 1. API Key 설정 (GitHub Pages 배포용)
 
-프로젝트 루트에 `.env` 파일을 만들고 아래처럼 넣어두면, `SAJU.AI`가 자동으로 읽습니다:
+`script.js` 파일 상단에서 `OPENAI_API_KEY` 상수를 찾아 본인의 API 키로 교체하세요:
 
-```env
-OPENAI_API_KEY=sk-...실제키...
+```javascript
+// ⚠️ API 키 설정 (GitHub Pages 배포용)
+const OPENAI_API_KEY = "sk-proj-...여기에본인키입력...";
 ```
 
-발급: OpenAI 플랫폼에서 API 키 생성
+발급: [OpenAI Platform](https://platform.openai.com/api-keys)
 
-### 2. 로컬 서버 실행 (권장: .env 자동 로드)
+⚠️ **주의**: API 키를 코드에 직접 넣으면 GitHub에 공개됩니다. 프라이빗 저장소를 사용하거나, 배포 후 키를 환경변수로 관리하세요.
 
-브라우저 모듈(`importmap`) 로딩을 위해 반드시 로컬 서버를 사용하세요.
+### 2. 브라우저 접속
 
-`.env` 자동 로드를 원하면 아래 서버를 사용하세요:
-
-```bash
-node server.mjs
-```
-
-### 3. 브라우저 접속
-
-`http://localhost:5500` 열고:
+GitHub Pages 배포 후 또는 로컬에서:
 1. 생년월일 6자리 입력 (예: 930721)
-2. 태어난 시간 입력 (예: 14:30)
+2. 태어난 시간대 선택 (예: 오시 11:00~13:00)
 3. 성별 및 연애 상태 선택
 4. **"✨ 내 사주 분석하기"** 버튼 클릭
 
@@ -73,7 +66,7 @@ MANSE/
 - **로직**: ES6+ Modules
 - **라이브러리** (CDN):
   - `lunar-javascript`: 만세력(사주) 계산
-  - `@google/generative-ai`: Gemini Flash API
+  - `OpenAI API`: 심리 분석 (gpt-4o-mini)
   - `marked.js`: Markdown 렌더링
   - `tailwindcss`: Utility CSS 프레임워크
 
@@ -101,9 +94,8 @@ MANSE/
 ## 📚 참고 자료
 
 - [lunar-javascript GitHub](https://github.com/6tail/lunar-javascript)
-- [Google Gemini API Docs](https://ai.google.dev/docs)
-- [RALPH Architecture](https://arxiv.org/abs/2108.04812) (개념 참고)
+- [OpenAI API Docs](https://platform.openai.com/docs)
 
 ---
 
-**Made with ❤️ by RALPH Architecture**
+**Made with 🔮 by SAJU.AI**
