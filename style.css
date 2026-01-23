@@ -45,7 +45,7 @@ html, body {
 #result h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  margin: 1.25rem 0 0.75rem;
+  margin: 1.5rem 0 1rem;
   color: #2D2D2D;
 }
 
@@ -58,8 +58,13 @@ html, body {
 
 #result p {
   line-height: 1.8;
-  margin: 0.75rem 0;
+  margin: 1rem 0;
   color: #374151;
+}
+
+/* 감성 에세이 가독성: 문단 간격 더 넓게 */
+#result p + p {
+  margin-top: 1.25rem;
 }
 
 #result strong {
