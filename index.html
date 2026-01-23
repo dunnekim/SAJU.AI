@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SAJU.AI - 요즘 다들 이걸로 사주 본대 🔮</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'saju-cream': '#F9F8F4',
+              'saju-accent': '#FF6B50',
+              'saju-text': '#2D2D2D'
+            },
+            fontFamily: {
+              sans: ['Pretendard Variable', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- marked.js (Markdown renderer) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Import maps: lunar-javascript (CDN only) -->
+    <script type="importmap">
+      {
+        "imports": {
+          "lunar-javascript": "https://esm.run/lunar-javascript"
+        }
+      }
+    </script>
+
+    <style>
+      /* 커스텀 애니메이션 */
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(3deg); }
+      }
+      .float-animation {
+        animation: float 3s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-saju-cream text-saju-text min-h-screen antialiased">
+    <main class="max-w-2xl mx-auto px-4 py-8 md:py-12">
+      <!-- 헤더 섹션 -->
+      <header class="text-center mb-12">
+        <div class="inline-block float-animation mb-4">
+          <span class="text-6xl">🔮</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-saju-text mb-3 tracking-tight">
+          SAJU.AI
+        </h1>
+        <p class="text-sm font-semibold tracking-[0.18em] text-saju-accent/90 mb-2">
+          MINIMAL SAJU ANALYST
+        </p>
+        <p class="text-lg md:text-xl text-gray-600 font-medium">
+          당신의 내면을 읽어드립니다 ✨
+        </p>
+      </header>
+
+      <!-- 입력 폼 카드 -->
+      <section class="bg-white rounded-2xl shadow-sm mb-8 p-6 md:p-8">
+        <div class="mb-6">
+          <h2 class="text-xl font-bold text-saju-text mb-2">생년월일 입력</h2>
+          <p class="text-sm text-gray-500">정확한 분석을 위해 출생 정보를 입력해주세요</p>
+        </div>
+        <form id="sajuForm" autocomplete="off" class="space-y-6">
+          <!-- 생년월일 통합 (YYMMDD) + 시간 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="birthdate" class="block text-sm font-semibold text-gray-700 mb-2">생년월일 (6자리)</label>
+              <input 
+                id="birthdate" 
+                type="text" 
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                placeholder="930721 (YYMMDD)" 
+                required 
+                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-saju-accent focus:ring-2 focus:ring-saju-accent/20 transition-all"
+              />
+            </div>
+            <div>
+              <label for="time" class="block text-sm font-semibold text-gray-700 mb-2">태어난 시간</label>
+              <input 
+                id="time" 
+                type="time" 
+                required 
+                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-saju-accent focus:ring-2 focus:ring-saju-accent/20 transition-all"
+              />
+            </div>
+          </div>
+
+          <!-- 성별 -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-3">성별</label>
+            <div class="flex gap-3" role="radiogroup" aria-label="gender">
+              <label class="flex-1 cursor-pointer">
+                <input type="radio" name="gender" value="male" checked class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  남
+                </div>
+              </label>
+              <label class="flex-1 cursor-pointer">
+                <input type="radio" name="gender" value="female" class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  여
+                </div>
+              </label>
+              <label class="flex-1 cursor-pointer">
+                <input type="radio" name="gender" value="other" class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  기타
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- 연애 상태 -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-3">현재 연애 상태</label>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3" role="radiogroup" aria-label="relationship">
+              <label class="cursor-pointer">
+                <input type="radio" name="relationship" value="single" checked class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  솔로
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="relationship" value="dating" class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  연애 중
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="relationship" value="plateau" class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  권태기
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="relationship" value="married" class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  결혼
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="relationship" value="divorced" class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  이혼
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="relationship" value="widowed" class="peer sr-only" />
+                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
+                  사별
+                </div>
+              </label>
+            </div>
+          </div>
+
+
+          <!-- (no API key UI) -->
+
+          <!-- 제출 버튼 -->
+          <button 
+            type="submit" 
+            id="analyzeBtn"
+            class="w-full bg-saju-accent text-white font-bold py-4 px-6 rounded-full hover:bg-[#FF5540] active:scale-[0.98] transition-all shadow-sm hover:shadow-md"
+          >
+            ✨ 내 사주 분석하기
+          </button>
+
+        </form>
+      </section>
+
+      <!-- 상태 메시지 -->
+      <div 
+        id="status" 
+        class="hidden mb-6 px-6 py-4 rounded-xl border-2 transition-all"
+        aria-live="polite"
+      ></div>
+
+      <!-- 결과 카드 -->
+      <section class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+        <div class="mb-6">
+          <h2 class="text-xl font-bold text-saju-text flex items-center gap-2">
+            <span>📊</span>
+            <span>분석 결과</span>
+          </h2>
+        </div>
+        
+        <article 
+          id="result" 
+          class="prose prose-stone max-w-none min-h-[200px]"
+        >
+          <div class="text-center py-12 text-gray-400">
+            <p class="text-lg mb-2">🎯</p>
+            <p>생년월일을 입력하고 분석하기 버튼을 눌러보세요</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- 푸터 노트 -->
+      <footer class="mt-8 px-4 py-6 bg-white/50 rounded-xl border border-gray-100 text-center">
+        <p class="text-sm text-gray-600">
+          💡 미래 예측이 아닌, 당신의 <span class="font-semibold text-saju-accent">심리와 성향</span>을 분석합니다
+        </p>
+      </footer>
+    </main>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
