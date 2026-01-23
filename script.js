@@ -1,5 +1,9 @@
 import { Solar } from "lunar-javascript";
 
+// ⚠️ API 키 설정 (GitHub Pages 배포용)
+// 아래 빈 문자열에 본인의 OpenAI API 키를 직접 넣으세요
+const OPENAI_API_KEY = "";
+
 // 심금을 울리는 심리 분석 프롬프트 (소설 "혼모노" 스타일)
 const systemInstruction = `
 SYSTEM:
@@ -84,20 +88,7 @@ STYLE CONSTRAINTS:
 - Write like you're revealing something the person already felt but couldn't articulate
 `;
 
-async function loadEnvJson() {
-  // Served by server.mjs using local .env file
-  try {
-    const res = await fetch("/env.json", { cache: "no-store" });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
-function getOpenAIApiKeyFromEnv(env) {
-  return String(env?.OPENAI_API_KEY || "").trim();
-}
+// env.json 관련 코드 제거됨 (GitHub Pages 배포용)
 
 // Deterministic mappings (do NOT infer)
 const GAN_TO_ELEMENT = Object.freeze({
@@ -262,13 +253,8 @@ export function calculateSaju(year, month, day, hour, minute) {
 
 // Step 3. 해석 레이어
 export async function analyzeSaju({ sajuJson }) {
-  const env = await loadEnvJson();
-  if (!env) {
-    throw new Error("로컬 서버 설정 문제: /env.json에 접근할 수 없습니다. (반드시 `node server.mjs`로 실행)");
-  }
-  const openaiKey = getOpenAIApiKeyFromEnv(env);
-  if (!openaiKey) {
-    throw new Error("로컬 서버 설정 문제: .env에서 API 키를 읽지 못했습니다. (키 이름: OPENAI_API_KEY)");
+  if (!OPENAI_API_KEY) {
+    throw new Error("API 키가 설정되지 않았습니다. script.js 파일 상단의 OPENAI_API_KEY를 설정하세요.");
   }
 
   const userPrompt = [
@@ -288,7 +274,7 @@ export async function analyzeSaju({ sajuJson }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${openaiKey}`,
+      Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
@@ -365,6 +351,13 @@ function getTimeParts(timeStr) {
   return { hour: Number(hh), minute: Number(mm) };
 }
 
+function parseTimeRange(rangeStr) {
+  // "07-09" 같은 시간대 문자열을 파싱
+  if (!rangeStr) return { hour: 12, minute: 0 }; // 기본값
+  const [start] = rangeStr.split("-");
+  return { hour: parseInt(start, 10), minute: 0 };
+}
+
 function parseBirthdate(yymmdd) {
   // YYMMDD 6자리 파싱
   const s = String(yymmdd || "").trim();
@@ -383,14 +376,7 @@ function parseBirthdate(yymmdd) {
 }
 
 if (form) {
-  // Reasonable defaults
-  const now = new Date();
-  const timeEl = document.getElementById("time");
-  if (timeEl && !timeEl.value) {
-    timeEl.value = `${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
-  }
-
-  // API Key UI removed: .env-only via server.mjs (/env.json)
+  // 기본값 설정 불필요 (셀렉트박스는 사용자가 선택)
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -401,8 +387,8 @@ if (form) {
       const birthdateInput = document.getElementById("birthdate").value;
       const { year, month, day } = parseBirthdate(birthdateInput);
       
-      const time = document.getElementById("time").value;
-      const { hour, minute } = getTimeParts(time);
+      const birthHourRange = document.getElementById("birthHour").value;
+      const { hour, minute } = parseTimeRange(birthHourRange);
       
       window.__sajuGender = getGenderValue();
       window.__sajuRelationship = getRelationshipValue();
