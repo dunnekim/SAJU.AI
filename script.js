@@ -509,7 +509,7 @@ function showLoadingOverlay() {
       currentProgress = Math.min(90, currentProgress + increment);
       updateProgress(Math.floor(currentProgress));
     }
-  }, 450);
+  }, 600);
 }
 
 function completeLoadingOverlay() {
@@ -811,6 +811,17 @@ if (form) {
       // 결과 렌더링
       setStatus("분석 완료. 아래 결과를 확인하세요.", "ok");
       renderMarkdown(md);
+      
+      // 결과 영역으로 부드럽게 스크롤 (로딩 오버레이 fade-out 후)
+      setTimeout(() => {
+        if (resultEl) {
+          resultEl.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          });
+        }
+      }, 600);
     } catch (err) {
       // 에러 시 로딩 즉시 종료
       if (progressInterval) {
