@@ -34,37 +34,46 @@ html, body {
   font-weight: 600;
 }
 
-/* Markdown 결과 타이포그래피 커스텀 */
+/* Markdown 결과 타이포그래피 커스텀 - 프리미엄 사주앱 스타일 */
 #result h1 {
   font-size: 1.75rem;
   font-weight: 700;
-  margin: 1.5rem 0 1rem;
+  margin: 3rem 0 1.5rem;
   color: #2D2D2D;
 }
 
 #result h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  margin: 1.5rem 0 1rem;
+  margin: 3rem 0 1.5rem;
   color: #2D2D2D;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 107, 80, 0.15);
+}
+
+#result h2:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
 }
 
 #result h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  margin: 1rem 0 0.5rem;
+  margin: 2rem 0 1rem;
   color: #4B5563;
 }
 
 #result p {
-  line-height: 1.8;
-  margin: 1rem 0;
+  line-height: 2.2;
+  margin: 1.5rem 0;
   color: #374151;
+  font-size: 1.0625rem;
 }
 
-/* 감성 에세이 가독성: 문단 간격 더 넓게 */
+/* 연속 문단 간격 대폭 확대 (가독성) */
 #result p + p {
-  margin-top: 1.25rem;
+  margin-top: 2rem;
 }
 
 #result strong {
