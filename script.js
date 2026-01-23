@@ -664,7 +664,6 @@ function initApiKeyModal() {
   const modal = document.getElementById('apiKeyModal');
   const apiKeyInput = document.getElementById('apiKeyInput');
   const saveKeyBtn = document.getElementById('saveKeyBtn');
-  const changeKeyBtn = document.getElementById('changeKeyBtn');
 
   // 페이지 로드 시 키 확인
   const existingKey = getApiKey();
@@ -674,9 +673,6 @@ function initApiKeyModal() {
   } else {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
-    if (changeKeyBtn) {
-      changeKeyBtn.classList.remove('hidden');
-    }
   }
 
   // 키 저장
@@ -694,9 +690,6 @@ function initApiKeyModal() {
       setApiKey(key);
       modal.classList.add('hidden');
       modal.classList.remove('flex');
-      if (changeKeyBtn) {
-        changeKeyBtn.classList.remove('hidden');
-      }
       apiKeyInput.value = '';
       location.reload(); // 페이지 새로고침
     });
@@ -710,16 +703,6 @@ function initApiKeyModal() {
       }
     });
   }
-
-  // 키 변경 버튼
-  if (changeKeyBtn) {
-    changeKeyBtn.addEventListener('click', () => {
-      clearApiKey();
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      changeKeyBtn.classList.add('hidden');
-    });
-  }
 }
 
 if (form) {
@@ -729,6 +712,7 @@ if (form) {
   // 탭 전환 로직
   const tabButtons = document.querySelectorAll('.tab-btn');
   const partnerSection = document.getElementById('partnerSection');
+  const relationshipSection = document.getElementById('relationshipSection');
   
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -745,16 +729,18 @@ if (form) {
       // 현재 모드 업데이트
       currentMode = btn.dataset.mode;
       
-      // 궁합 분석 모드일 때만 상대방 섹션 표시
+      // 궁합 분석 모드일 때만 상대방 섹션과 연애 상태 표시
       if (currentMode === 'compatibility') {
         partnerSection.classList.remove('hidden');
         partnerSection.classList.add('space-y-6');
+        relationshipSection.classList.remove('hidden');
         // 상대방 입력 필드 required 설정
         document.getElementById('partnerBirthdate').required = true;
         document.getElementById('partnerBirthHour').required = true;
       } else {
         partnerSection.classList.add('hidden');
         partnerSection.classList.remove('space-y-6');
+        relationshipSection.classList.add('hidden');
         // 상대방 입력 필드 required 해제
         document.getElementById('partnerBirthdate').required = false;
         document.getElementById('partnerBirthHour').required = false;
