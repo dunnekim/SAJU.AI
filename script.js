@@ -350,6 +350,62 @@ const form = document.getElementById("sajuForm");
 const statusEl = document.getElementById("status");
 const resultEl = document.getElementById("result");
 const analyzeBtn = document.getElementById("analyzeBtn");
+const loadingOverlay = document.getElementById("loadingOverlay");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+
+// 로딩 프로그레스 관리
+let progressInterval = null;
+let currentProgress = 0;
+
+function showLoadingOverlay() {
+  if (!loadingOverlay) return;
+  currentProgress = 0;
+  updateProgress(0);
+  loadingOverlay.classList.remove('hidden');
+  loadingOverlay.classList.add('flex');
+  
+  // Fake progress: 0% -> 90%까지 불규칙하게 증가
+  progressInterval = setInterval(() => {
+    if (currentProgress < 90) {
+      // 불규칙한 증가 (1~5% 랜덤)
+      const increment = Math.random() * 4 + 1;
+      currentProgress = Math.min(90, currentProgress + increment);
+      updateProgress(Math.floor(currentProgress));
+    }
+  }, 150);
+}
+
+function completeLoadingOverlay() {
+  if (!loadingOverlay) return;
+  
+  // interval 정리
+  if (progressInterval) {
+    clearInterval(progressInterval);
+    progressInterval = null;
+  }
+  
+  // 즉시 100%로
+  updateProgress(100);
+  
+  // 0.5초 후 페이드아웃
+  setTimeout(() => {
+    loadingOverlay.classList.add('animate-fade-out');
+    setTimeout(() => {
+      loadingOverlay.classList.remove('flex', 'animate-fade-out');
+      loadingOverlay.classList.add('hidden');
+    }, 500);
+  }, 500);
+}
+
+function updateProgress(percent) {
+  if (progressBar) {
+    progressBar.style.width = `${percent}%`;
+  }
+  if (progressText) {
+    progressText.textContent = `${percent}%`;
+  }
+}
 
 function setStatus(message, kind = "info") {
   if (!statusEl) return;
@@ -375,59 +431,50 @@ function clearStatus() {
 function renderMarkdown(md) {
   if (!resultEl) return;
   
-  if (window.marked && typeof window.marked.parse === "function") {
-    // safer defaults (still not a sanitizer)
-    window.marked.setOptions({ mangle: false, headerIds: false });
-    const htmlContent = window.marked.parse(md);
-    
-    // 임시 컨테이너에 렌더링
-    const temp = document.createElement('div');
-    temp.innerHTML = htmlContent;
-    
-    // h2를 기준으로 섹션 분할
-    const sections = [];
-    let currentSection = null;
-    
-    Array.from(temp.childNodes).forEach(node => {
-      if (node.nodeType === 1 && node.tagName === 'H2') {
-        // 새로운 섹션 시작
-        if (currentSection) {
-          sections.push(currentSection);
-        }
-        currentSection = {
-          title: node,
-          content: []
-        };
-      } else if (currentSection) {
-        // 현재 섹션에 내용 추가
-        currentSection.content.push(node);
-      }
-    });
-    
-    // 마지막 섹션 추가
-    if (currentSection) {
-      sections.push(currentSection);
+  if (!window.marked || typeof window.marked.parse !== "function") {
+    resultEl.textContent = md;
+    return;
+  }
+
+  // 문자열 파싱 방식으로 섹션 분할
+  window.marked.setOptions({ mangle: false, headerIds: false });
+  
+  // ## 기준으로 split (줄바꿈 포함)
+  const sections = md.split(/\n(?=## )/g);
+  
+  // 결과 영역 초기화
+  resultEl.innerHTML = '';
+  
+  sections.forEach((section, index) => {
+    const trimmed = section.trim();
+    if (!trimmed || !trimmed.startsWith('##')) {
+      // 서론이거나 빈 섹션은 스킵
+      return;
     }
     
-    // 섹션별 카드로 재구성
-    resultEl.innerHTML = '';
-    sections.forEach(section => {
-      const card = document.createElement('div');
-      card.className = 'section-card';
-      
-      // 제목 추가
-      card.appendChild(section.title);
-      
-      // 내용 추가
-      section.content.forEach(node => {
-        card.appendChild(node);
-      });
-      
-      resultEl.appendChild(card);
-    });
-  } else {
-    resultEl.textContent = md;
-  }
+    // 제목과 본문 분리
+    const lines = trimmed.split('\n');
+    const titleLine = lines[0].replace(/^##\s*/, ''); // ## 제거
+    const bodyLines = lines.slice(1).join('\n').trim();
+    
+    // 카드 생성
+    const card = document.createElement('div');
+    card.className = 'section-card';
+    
+    // 제목 생성 (Tailwind 클래스 직접 적용)
+    const titleEl = document.createElement('h2');
+    titleEl.className = 'text-xl font-bold text-saju-accent mb-4';
+    titleEl.textContent = titleLine;
+    
+    // 본문 생성 (Markdown 파싱)
+    const bodyEl = document.createElement('div');
+    bodyEl.className = 'prose prose-stone leading-relaxed text-gray-700';
+    bodyEl.innerHTML = window.marked.parse(bodyLines);
+    
+    card.appendChild(titleEl);
+    card.appendChild(bodyEl);
+    resultEl.appendChild(card);
+  });
 }
 
 function getGenderValue() {
@@ -457,7 +504,7 @@ function parseBirthdate(yymmdd) {
   // YYMMDD 6자리 파싱
   const s = String(yymmdd || "").trim();
   if (s.length !== 6 || !/^\d{6}$/.test(s)) {
-    throw new Error("생년월일은 6자리 숫자로 입력해주세요 (예: 930721)");
+    throw new Error("생년월일은 6자리 숫자로 입력해주세요 (예: 930320)");
   }
   
   const yy = parseInt(s.substring(0, 2), 10);
@@ -554,11 +601,29 @@ if (form) {
 
       const sajuJson = calculateSaju(year, month, day, hour, minute);
 
-      setStatus("사주 계산 완료. 당신의 내면을 분석하는 중...", "info");
+      // 로딩 오버레이 표시
+      showLoadingOverlay();
+      
+      // API 호출
       const md = await analyzeSaju({ sajuJson });
+      
+      // 로딩 완료
+      completeLoadingOverlay();
+      
+      // 결과 렌더링
       setStatus("분석 완료. 아래 결과를 확인하세요.", "ok");
       renderMarkdown(md);
     } catch (err) {
+      // 에러 시 로딩 즉시 종료
+      if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+      }
+      if (loadingOverlay) {
+        loadingOverlay.classList.remove('flex');
+        loadingOverlay.classList.add('hidden');
+      }
+      
       setStatus(err?.message || "오류가 발생했습니다.", "error");
       renderMarkdown(
         [

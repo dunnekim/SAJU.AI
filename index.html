@@ -40,11 +40,6 @@
     </script>
 
     <style>
-      /* Pretendard 폰트 전역 적용 */
-      body {
-        font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-      }
-      
       /* 커스텀 애니메이션 */
       @keyframes float {
         0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -60,9 +55,41 @@
       .animate-fade-in {
         animation: fade-in 0.3s ease-out;
       }
+      @keyframes fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+      .animate-fade-out {
+        animation: fade-out 0.5s ease-out forwards;
+      }
+      @keyframes progress-fill {
+        from { width: 0%; }
+        to { width: 100%; }
+      }
     </style>
   </head>
-  <body class="bg-saju-cream text-saju-text min-h-screen antialiased">
+  <body class="font-sans bg-saju-cream text-saju-text min-h-screen antialiased">
+    <!-- 로딩 프로그레스 오버레이 -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-white/95 backdrop-blur-sm z-50 items-center justify-center">
+      <div class="text-center px-6">
+        <div class="mb-6">
+          <span class="text-6xl animate-pulse">🔮</span>
+        </div>
+        <h3 class="text-2xl font-bold text-saju-text mb-2">운명을 읽어내는 중입니다...</h3>
+        <p class="text-sm text-gray-600 mb-8">잠시만 기다려주세요</p>
+        
+        <!-- Progress Bar -->
+        <div class="max-w-md mx-auto mb-4">
+          <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-saju-accent to-orange-400 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <!-- Percentage -->
+        <p id="progressText" class="text-lg font-bold text-saju-accent">0%</p>
+      </div>
+    </div>
+
     <!-- 인증 키 입력 모달 -->
     <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center p-4">
       <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-fade-in">

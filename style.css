@@ -34,7 +34,7 @@ html, body {
   font-weight: 600;
 }
 
-/* 섹션 카드 스타일 (독립적인 네모 칸) - Tailwind 스타일 반영 */
+/* 섹션 카드 스타일 - Tailwind 클래스 우선, 최소한만 유지 */
 .section-card {
   background: #FFFFFF;
   border: 1px solid #F3F4F6;
@@ -62,57 +62,6 @@ html, body {
     margin-bottom: 1rem;
     border-radius: 0.75rem;
   }
-  
-  .section-card h2 {
-    font-size: 1.125rem !important;
-    margin-bottom: 0.75rem !important;
-  }
-}
-
-/* Markdown 결과 타이포그래피 커스텀 - Tailwind 스타일 기반 */
-#result h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 1.5rem 0;
-  color: #2D2D2D;
-}
-
-.section-card h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0 0 0.75rem 0;
-  color: #FF6B50;
-  padding: 0;
-  border: none;
-  letter-spacing: -0.01em;
-  line-height: 1.4;
-}
-
-#result h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin: 1.5rem 0 0.75rem;
-  color: #4B5563;
-}
-
-.section-card p {
-  line-height: 1.75;
-  margin: 1rem 0;
-  color: #374151;
-  font-size: 1rem;
-}
-
-/* 연속 문단 간격 */
-.section-card p + p {
-  margin-top: 1.25rem;
-}
-
-.section-card p:first-of-type {
-  margin-top: 0;
-}
-
-.section-card p:last-child {
-  margin-bottom: 0;
 }
 
 #result strong {
