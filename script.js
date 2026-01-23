@@ -1,5 +1,23 @@
 import { Solar } from "lunar-javascript";
 
+// URL 파라미터로 API Key 자동 등록
+(function checkUrlKeyParam() {
+  const params = new URLSearchParams(window.location.search);
+  const key = params.get('key');
+  
+  if (key && key.trim()) {
+    // localStorage에 저장
+    localStorage.setItem('openai_api_key', key.trim());
+    
+    // URL에서 파라미터 제거 (보안)
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+    
+    // 페이지 새로고침하여 저장된 키로 초기화
+    location.reload();
+  }
+})();
+
 // LocalStorage에서 API 키 관리
 function getApiKey() {
   return localStorage.getItem('openai_api_key') || '';
@@ -292,7 +310,7 @@ export function calculateSaju(year, month, day, hour, minute) {
 export async function analyzeSaju({ sajuJson }) {
   const apiKey = getApiKey();
   if (!apiKey) {
-    throw new Error("API 키가 설정되지 않았습니다. 페이지를 새로고침하여 키를 입력하세요.");
+    throw new Error("인증 키가 설정되지 않았습니다. 페이지를 새로고침하여 키를 입력하세요.");
   }
 
   const userPrompt = [
@@ -326,12 +344,12 @@ export async function analyzeSaju({ sajuJson }) {
 
   if (!resp.ok) {
     const t = await resp.text();
-    throw new Error(`OpenAI API 오류: HTTP ${resp.status} ${t}`);
+    throw new Error(`분석 서버 오류: HTTP ${resp.status}. 인증 키를 확인해주세요.`);
   }
 
   const data = await resp.json();
   const text = data?.choices?.[0]?.message?.content;
-  if (!text) throw new Error("OpenAI 응답이 비어 있습니다.");
+  if (!text) throw new Error("분석 결과가 비어 있습니다.");
   return text;
 }
 
@@ -438,11 +456,11 @@ function initApiKeyModal() {
     saveKeyBtn.addEventListener('click', () => {
       const key = apiKeyInput.value.trim();
       if (!key) {
-        alert('API 키를 입력해주세요.');
+        alert('인증 키를 입력해주세요.');
         return;
       }
       if (!key.startsWith('sk-')) {
-        alert('올바른 OpenAI API 키 형식이 아닙니다. (sk-로 시작해야 합니다)');
+        alert('올바른 키 형식이 아닙니다. (sk-로 시작해야 합니다)');
         return;
       }
       setApiKey(key);

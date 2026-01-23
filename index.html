@@ -55,22 +55,22 @@
     </style>
   </head>
   <body class="bg-saju-cream text-saju-text min-h-screen antialiased">
-    <!-- API Key 입력 모달 -->
+    <!-- 인증 키 입력 모달 -->
     <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center p-4">
       <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-fade-in">
         <div class="text-center mb-6">
           <div class="inline-block mb-4">
             <span class="text-5xl">🔑</span>
           </div>
-          <h2 class="text-2xl font-bold text-saju-text mb-2">API Key 설정</h2>
+          <h2 class="text-2xl font-bold text-saju-text mb-2">인증 키 설정</h2>
           <p class="text-sm text-gray-600">
-            OpenAI API 키를 입력하면 바로 사용할 수 있습니다
+            분석을 위한 인증 키를 입력하세요
           </p>
         </div>
 
         <div class="mb-6">
           <label for="apiKeyInput" class="block text-sm font-semibold text-gray-700 mb-2">
-            OpenAI API Key
+            인증 키
           </label>
           <input 
             id="apiKeyInput" 
@@ -84,13 +84,11 @@
           <div class="flex items-start gap-3">
             <span class="text-blue-600 text-xl flex-shrink-0">ℹ️</span>
             <div class="text-sm text-blue-800">
-              <p class="font-semibold mb-1">API 키는 안전합니다</p>
-              <p class="text-blue-700">• 브라우저에만 저장됩니다 (서버 전송 없음)</p>
-              <p class="text-blue-700">• GitHub에 업로드되지 않습니다</p>
-              <p class="text-blue-700 mt-2">
-                <a href="https://platform.openai.com/api-keys" target="_blank" class="underline font-semibold hover:text-saju-accent">
-                  OpenAI에서 키 발급받기 →
-                </a>
+              <p class="font-semibold mb-1">안전하게 저장됩니다</p>
+              <p class="text-blue-700">• 브라우저에만 저장 (서버 전송 없음)</p>
+              <p class="text-blue-700">• 외부로 유출되지 않습니다</p>
+              <p class="text-blue-700 mt-2 text-xs">
+                키가 없으신가요? 관리자에게 문의하세요
               </p>
             </div>
           </div>
@@ -287,7 +285,7 @@
           id="changeKeyBtn"
           class="hidden text-xs text-gray-500 hover:text-saju-accent transition-colors underline"
         >
-          🔑 API Key 변경
+          🔑 인증 키 변경
         </button>
       </footer>
     </main>
