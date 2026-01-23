@@ -501,7 +501,7 @@ function showLoadingOverlay() {
   loadingOverlay.classList.remove('hidden');
   loadingOverlay.classList.add('flex');
   
-  // Fake progress: 0% -> 90%까지 불규칙하게 증가
+  // Fake progress: 0% -> 90%까지 불규칙하게 증가 (3배 느린 속도)
   progressInterval = setInterval(() => {
     if (currentProgress < 90) {
       // 불규칙한 증가 (1~5% 랜덤)
@@ -509,7 +509,7 @@ function showLoadingOverlay() {
       currentProgress = Math.min(90, currentProgress + increment);
       updateProgress(Math.floor(currentProgress));
     }
-  }, 150);
+  }, 450);
 }
 
 function completeLoadingOverlay() {
