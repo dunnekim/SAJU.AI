@@ -15,21 +15,10 @@ html, body {
   padding: 0;
 }
 
-/* 탭 버튼 스타일 */
-.tab-btn {
-  background: transparent;
-  color: #6B7280;
-}
-
-.tab-btn.active {
-  background: #FFFFFF;
-  color: #FF6B50;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.tab-btn:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.5);
-  color: #4B5563;
+/* 탭 버튼 호버 효과 */
+.tab-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* 상태 메시지 스타일 (Tailwind 보완) */

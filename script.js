@@ -141,29 +141,42 @@ Goal: 단순한 적성 검사를 넘어, 당신이 일에서 성취감을 느끼
 4. **초점:** 직업적 잠재력, 조직 적합도, 변화의 타이밍에 집중하세요.
 5. **금지어:** "따라서", "그러므로", "결론적으로", "귀하"
 6. **가독성:** 한 문단은 2~3문장만. 문단 사이에 빈 줄 필수.
+7. **상황 반영:** JSON 데이터의 birth_info.career_status 값을 반드시 참고하세요.
+   - "seeking" (취준생): 적성과 가능성 중심으로 조언
+   - "burnout" (현타 왔어): 멘탈 케어와 회복, 에너지 재충전 중심으로 공감
+   - "moving" (탈주 각): 이직 타이밍과 새로운 기회 포착에 집중
 
 [출력 섹션 구성 (Markdown)]
 
 ## 💎 숨겨진 직업적 DNA
-(타고난 일머리와 재능, 당신이 빛나는 순간을 서술. 3~4개 문단.)
+(타고난 일머리와 재능, 당신이 빛나는 순간을 서술. career_status에 따라 초점 조정. 3~4개 문단.)
 
 ## 🏹 나에게 맞는 조직 문화
 (리더형 vs 참모형 vs 프리랜서, 어떤 환경에서 성장하는지 분석. 3~4개 문단.)
 
-## 🌪️ 이직을 고민하는 이유
-(현재 심리 상태, 직업적 갈등, 불만족의 본질을 공감하며 분석. 3~4개 문단.)
+## 🌪️ 지금 당신의 마음
+(career_status에 따라 달리 서술:
+- seeking: 취업 준비의 불안과 기대
+- burnout: 지친 마음과 현실의 무게
+- moving: 이직 결심과 두려움
+현재 심리 상태를 공감하며 분석. 3~4개 문단.)
 
 ## 🌊 변화의 바람과 타이밍
-(지금 움직여도 좋을지, 기다려야 할지 조언. 단, 미래 예언은 금지. 3~4개 문단.)
+(career_status에 따라 달리 조언:
+- seeking: 언제 어떤 기회를 잡으면 좋을지
+- burnout: 쉬어야 할지, 버텨야 할지
+- moving: 지금 움직여도 좋을지, 기다려야 할지
+단, 미래 예언은 금지. 3~4개 문단.)
 
 ## 🚀 당신의 도약을 위한 한 마디
-(용기와 희망을 주는 메시지로 마무리. 3~4개 문단.)
+(용기와 희망을 주는 메시지로 마무리. career_status에 맞게 응원. 3~4개 문단.)
 
 [CRITICAL]
 - 2줄 이하 문단 금지
 - "~합니다/습니다" 금지
 - 사주 용어 노출 금지
 - 섹션 누락 금지 (반드시 5개 모두)
+- career_status를 반드시 반영하여 맞춤형 조언 제공
 `;
 
 function summarizeCounts(counts) {
@@ -183,6 +196,7 @@ function buildDeterministicHint(sajuJson) {
     const fe = sajuJson?.five_elements_count || {};
     const dm = sajuJson?.day_master || "";
     const rel = sajuJson?.birth_info?.relationship_status || "";
+    const career = sajuJson?.birth_info?.career_status || "";
     const { strongest, weakest, text } = summarizeCounts(fe);
 
     const pillarsLine = [
@@ -200,6 +214,7 @@ function buildDeterministicHint(sajuJson) {
       `오행:${text || "-"}`,
       `강한기운:${strongest || "-"} / 약한기운:${weakest || "-"}`,
       `관계상태:${rel || "-"}`,
+      `직업상태:${career || "-"}`,
     ].join("\n");
   } catch {
     return "";
@@ -362,6 +377,7 @@ export function calculateSaju(year, month, day, hour, minute) {
       solar: `${y}-${pad2(m)}-${pad2(d)} ${pad2(hh)}:${pad2(mm)}`,
       gender: window.__sajuGender || "",
       relationship_status: window.__sajuRelationship || "single",
+      career_status: window.__sajuCareerStatus || "seeking",
     },
     four_pillars,
     five_elements_count,
@@ -629,6 +645,11 @@ function getRelationshipValue() {
   return el ? el.value : "single";
 }
 
+function getCareerStatusValue() {
+  const el = document.querySelector('input[name="careerStatus"]:checked');
+  return el ? el.value : "seeking";
+}
+
 function getTimeParts(timeStr) {
   // "HH:mm"
   const [hh, mm] = String(timeStr || "").split(":");
@@ -713,34 +734,51 @@ if (form) {
   const tabButtons = document.querySelectorAll('.tab-btn');
   const partnerSection = document.getElementById('partnerSection');
   const relationshipSection = document.getElementById('relationshipSection');
+  const careerStatusSection = document.getElementById('careerStatusSection');
   
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      // 모든 탭 비활성화
+      // 모든 탭 비활성화 스타일 적용
       tabButtons.forEach(b => {
-        b.classList.remove('active');
+        // Inactive 스타일
+        b.classList.remove('border-2', 'border-saju-accent', 'bg-orange-50', 'text-saju-accent', 'font-bold', 'shadow-sm');
+        b.classList.add('border', 'border-gray-200', 'bg-white', 'text-gray-500', 'font-semibold');
         b.setAttribute('aria-selected', 'false');
       });
       
-      // 선택된 탭 활성화
-      btn.classList.add('active');
+      // 선택된 탭 활성화 스타일 적용
+      btn.classList.remove('border', 'border-gray-200', 'bg-white', 'text-gray-500', 'font-semibold');
+      btn.classList.add('border-2', 'border-saju-accent', 'bg-orange-50', 'text-saju-accent', 'font-bold', 'shadow-sm');
       btn.setAttribute('aria-selected', 'true');
       
       // 현재 모드 업데이트
       currentMode = btn.dataset.mode;
       
-      // 궁합 분석 모드일 때만 상대방 섹션과 연애 상태 표시
+      // 모드별 섹션 표시/숨김
       if (currentMode === 'compatibility') {
+        // 궁합 분석: 연애 상태 + 상대방 정보 표시
         partnerSection.classList.remove('hidden');
         partnerSection.classList.add('space-y-6');
         relationshipSection.classList.remove('hidden');
+        careerStatusSection.classList.add('hidden');
         // 상대방 입력 필드 required 설정
         document.getElementById('partnerBirthdate').required = true;
         document.getElementById('partnerBirthHour').required = true;
-      } else {
+      } else if (currentMode === 'career') {
+        // 커리어 분석: 직업 상태 표시
         partnerSection.classList.add('hidden');
         partnerSection.classList.remove('space-y-6');
         relationshipSection.classList.add('hidden');
+        careerStatusSection.classList.remove('hidden');
+        // 상대방 입력 필드 required 해제
+        document.getElementById('partnerBirthdate').required = false;
+        document.getElementById('partnerBirthHour').required = false;
+      } else {
+        // 종합 분석: 기본 입력만
+        partnerSection.classList.add('hidden');
+        partnerSection.classList.remove('space-y-6');
+        relationshipSection.classList.add('hidden');
+        careerStatusSection.classList.add('hidden');
         // 상대방 입력 필드 required 해제
         document.getElementById('partnerBirthdate').required = false;
         document.getElementById('partnerBirthHour').required = false;
@@ -762,6 +800,7 @@ if (form) {
       
       window.__sajuGender = getGenderValue();
       window.__sajuRelationship = getRelationshipValue();
+      window.__sajuCareerStatus = getCareerStatusValue();
 
       let sajuData;
       
