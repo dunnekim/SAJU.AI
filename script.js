@@ -35,73 +35,74 @@ function clearApiKey() {
 let currentMode = 'general'; // 'general' | 'compatibility' | 'career'
 
 // ------------------------------------------------------------------
-// V2.0 팩폭 프롬프트 (Fact-Bomb Engine)
+// V2.0 팩폭 프롬프트 (Fact-Bomb Engine) — 시장 경쟁력 고도화
 // ------------------------------------------------------------------
 const baseSystemHeader = `
-ROLE: 당신은 냉혹한 데이터 분석가이자 독설가임.
-GOAL: 내담자의 '자기기만'을 해체하고, 뼈아픈 현실을 직시하게 만듦.
+ROLE: 당신은 내담자의 무의식과 자기기만을 꿰뚫어 보는 '서늘한 통찰가'입니다.
+GOAL: 내담자가 애써 외면해온 '불편한 진실'을 논리적, 구조적으로 분석하여 정신이 번쩍 들게 만드십시오.
 TONE: 
-- 공감, 위로, "할 수 있다"는 희망 고문 금지.
-- "~임", "~함", "~것" 등의 건조하고 단정적인 어미 사용.
-- ** (볼드체) 마크다운 사용 절대 금지.
-- 문장은 짧고 날카롭게. 반박할 수 없는 사실 위주로 서술.
+- 격조 있는 단호함 (~입니다 체 사용).
+- 비유와 은유를 사용하되, 결론은 날카로운 비수로 마무리하십시오.
+- 넘버링(1., 2., 착각 1 등) 사용을 절대 금지합니다. 자연스러운 문장으로 이어지게 하십시오.
+- ** (볼드체) 마크다운 사용을 금지합니다.
+- 문단은 길고 깊이 있게, 각 섹션당 최소 3~4문단을 작성하십시오. 단순 사실 나열이 아닌 인과관계를 추론하는 심리 분석 에세이 형태로 서술하십시오.
 `;
 
 const generalInstruction = `
 ${baseSystemHeader}
 
 [출력 섹션 구성]
-## 1. 오행 불균형의 저주 (타고난 결함)
-(오행의 과다/결핍을 근거로, 현재 내담자가 겪는 가장 큰 심리적 문제를 비꼬듯이 지적. 3문단.)
+## 오행의 불균형이 초래한 성격적 결함
+(오행의 과다와 결핍이 어떻게 내담자의 인생을 망치고 있는지 구조적으로 서술하십시오. 단순 나열이 아닌, 기운의 흐름이 막힌 지점을 지적하십시오.)
 
-## 2. 자기기만 해체 (착각하고 있는 것들)
-(형식: "- 착각 1: 내용 \\n - 착각 2: 내용" 으로 구성. 내담자가 스스로를 속이고 있는 지점을 적나라하게 명시. 3문단.)
+## 당신이 스스로를 속이고 있는 가짜 위안
+(착각 1, 착각 2 같은 넘버링 없이, 내담자가 방어기제로 삼고 있는 논리를 무너뜨리십시오. 스스로를 합리화하는 지점을 정확히 타격하십시오.)
 
-## 3. 구조적 리스크와 5년 후
-(지금처럼 살았을 때 5년 뒤 도달하게 될 비참하거나 정체된 미래를 예언하듯 서술. 3문단.)
+## 현재의 패턴이 불러올 비참한 미래의 초상
+(이 습관이 5년 유지되었을 때 마주할 구체적인 정체 상태와 손실을 서술하십시오.)
 
-## 4. 당신이 피하고 있는 핵심 질문
-(인생을 바꾸기 위해 마주해야 하지만, 두려워서 도망치고 있는 질문 1개를 던짐. 3문단.)
+## 마지막으로 마주해야 할 단 하나의 질문
+(인생을 송두리째 바꿀 수 있지만, 두려워서 외면하는 질문을 던지십시오. 이 섹션의 마지막 문장은 인스타 공유용으로 쓰일 '한 줄 팩폭'으로 날카롭게 마무리하십시오.)
 `;
 
 const compatibilityInstruction = `
 ${baseSystemHeader}
-CONTEXT: 두 사람의 사주 데이터를 비교하여 관계의 '권력 구조'와 '파국 가능성'을 분석함.
+CONTEXT: 두 사람의 사주 데이터를 비교하여 관계의 '권력 구조'와 '파국 가능성'을 분석합니다.
 
 [출력 섹션 구성]
-## 1. 권력의 기울기 (누가 갑이고 을인가)
-(감정적 우위에 있는 사람과 끌려다니는 사람을 명확히 지적. 3문단.)
+## 권력의 기울기
+(감정적 우위에 있는 사람과 끌려다니는 사람을 명확히 지적하십시오. 넘버링 없이 연속된 문단으로 서술하십시오.)
 
-## 2. 서로가 착각하는 사랑의 방식
-(상대는 원하지 않는데 본인만 퍼주고 있는 헛발질 포인트 지적. 3문단.)
+## 서로가 착각하는 사랑의 방식
+(상대는 원하지 않는데 본인만 퍼주고 있는 헛발질 포인트를 넘버링 없이 논리적으로 파헤치십시오.)
 
-## 3. 필연적 파국 포인트 (헤어진다면 이유)
-(성격 차이, 가치관 충돌 등 관계를 끝장낼 수 있는 시한폭탄 지적. 3문단.)
+## 필연적 파국 포인트
+(성격 차이, 가치관 충돌 등 관계를 끝장낼 수 있는 시한폭탄을 구조적으로 지적하십시오.)
 
-## 4. 관계 유지를 위한 냉정한 비용
-(이 관계를 지속하기 위해 각자가 감수해야 할 손해와 비용 계산. 3문단.)
+## 관계 유지를 위한 냉정한 비용
+(이 관계를 지속하기 위해 각자가 감수해야 할 손해와 비용을 서술하십시오. 마지막 문장은 인스타 공유용 '한 줄 팩폭'으로 마무리하십시오.)
 `;
 
 const careerInstruction = `
 ${baseSystemHeader}
-CONTEXT: 당신은 채용 결정권자이자 연봉 협상 테이블의 냉혈한 매니저임.
+CONTEXT: 당신은 채용 결정권자이자 연봉 협상 테이블의 냉혈한 매니저입니다.
 CAREER_STATUS 반영: 
-- seeking(취준): "주제 파악 못하는 이상주의" 지적
-- burnout(현타): "배부른 투정" 혹은 "무능력의 회피" 지적
-- moving(탈주): "도피성 이직"의 위험성 경고
+- seeking(취준): "주제 파악 못하는 이상주의"를 지적하십시오.
+- burnout(현타): "배부른 투정" 혹은 "무능력의 회피"를 지적하십시오.
+- moving(탈주): "도피성 이직"의 위험성을 경고하십시오.
 
 [출력 섹션 구성]
-## 1. 시장가치 팩트체크 (과대평가된 역량)
-(냉정한 시장의 관점에서 내담자의 거품 낀 자신감을 지적. 3문단.)
+## 시장가치 팩트체크
+(냉정한 시장의 관점에서 내담자의 거품 낀 자신감을 넘버링 없이 구조적으로 지적하십시오.)
 
-## 2. 이력서의 치명적 구멍
-(면접관이 보자마자 탈락시킬 만한 약점과 태도 문제 지적. 3문단.)
+## 이력서의 치명적 구멍
+(면접관이 보자마자 탈락시킬 만한 약점과 태도 문제를 인과관계를 담아 서술하십시오.)
 
-## 3. 5년 후 당신의 명함
-(변화 없이 현재 상태가 유지될 경우 갖게 될 초라한 타이틀. 3문단.)
+## 5년 후 당신의 명함
+(변화 없이 현재 상태가 유지될 경우 갖게 될 초라한 타이틀을 서술하십시오.)
 
-## 4. 성공을 위해 당장 버려야 할 집착
-(성공 확률을 낮추는 쓸데없는 고집이나 습관 1개 지적. 3문단.)
+## 성공을 위해 당장 버려야 할 집착
+(성공 확률을 낮추는 쓸데없는 고집이나 습관을 지적하십시오. 마지막 문장은 인스타 공유용 '한 줄 팩폭'으로 마무리하십시오.)
 `;
 
 function summarizeCounts(counts) {
@@ -447,7 +448,7 @@ function clearStatus() {
   statusEl.textContent = "";
 }
 
-// 인스타 스토리 공유 카드 생성 및 다운로드 (V2.0 팩폭)
+// 인스타 스토리 공유 카드 — 명언 카드 (9:16, 마지막 한 문장만)
 function escapeHtml(s) {
   const div = document.createElement('div');
   div.textContent = s;
@@ -456,38 +457,41 @@ function escapeHtml(s) {
 
 window.downloadInstaCard = async function () {
   const resultEl = document.getElementById('result');
-  const cards = resultEl ? resultEl.querySelectorAll('.section-card') : [];
-  if (!resultEl || cards.length === 0) {
+  const sections = resultEl ? resultEl.querySelectorAll('.section-card') : [];
+  if (!resultEl || sections.length === 0) {
     alert('분석 결과가 있어야 공유할 수 있습니다.');
     return;
   }
-  const targetCard = cards.length > 0 ? cards[cards.length - 1] : null;
-  const titleEl = targetCard ? targetCard.querySelector('h2') : null;
-  const bodyEl = targetCard ? targetCard.querySelector('.prose') : null;
-  const title = titleEl ? titleEl.innerText : 'SAJU.AI 팩폭';
-  const rawContent = bodyEl ? bodyEl.innerText : '분석 결과 확인 요망';
-  const content = rawContent.length > 150 ? rawContent.substring(0, 150) + '...' : rawContent;
+
+  const lastSection = sections[sections.length - 1];
+  const proseEl = lastSection ? lastSection.querySelector('.prose') : null;
+  const fullText = proseEl ? proseEl.innerText : '';
+  const sentences = fullText.split(/[.!?]\s/).filter(s => s.trim().length > 5);
+  const hookSentence = sentences.length > 0
+    ? (sentences[sentences.length - 1].replace(/[.]$/, '') || '인생을 바꾸고 싶다면 고통을 마주하십시오.')
+    : '당신은 정말 이대로 살 것인가?';
 
   const captureDiv = document.createElement('div');
   captureDiv.style.cssText = `
-    position: fixed; top: -9999px; left: -9999px; width: 375px; height: 667px;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    color: white; padding: 40px; box-sizing: border-box; font-family: 'Pretendard', sans-serif;
-    display: flex; flex-direction: column; justify-content: space-between;
+    position: fixed; top: -9999px; left: -9999px; width: 1080px; height: 1920px;
+    background: #1a1a1a; color: white; padding: 100px 80px; box-sizing: border-box;
+    font-family: 'Pretendard', sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
   `;
   captureDiv.innerHTML = `
-    <div>
-      <div style="font-size: 50px; margin-bottom: 20px;">🔮</div>
-      <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #FF6B50;">SAJU.AI</h1>
-      <p style="font-size: 14px; opacity: 0.7; letter-spacing: 2px;">AI 운명 분석기</p>
+    <div style="margin-bottom: 120px; opacity: 0.8;">
+      <span style="font-size: 120px;">🔮</span>
+      <h1 style="font-size: 60px; font-weight: 800; color: #FF6B50; margin-top: 40px; letter-spacing: 10px;">SAJU.AI</h1>
     </div>
-    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
-      <h2 style="font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #FF6B50;">${escapeHtml(title)}</h2>
-      <p style="font-size: 16px; line-height: 1.6; font-weight: 500;">${escapeHtml(content)}</p>
+    <div style="width: 100%; position: relative;">
+      <span style="font-size: 200px; color: #FF6B50; opacity: 0.3; position: absolute; top: -150px; left: 0;">"</span>
+      <p style="font-size: 72px; line-height: 1.4; font-weight: 700; word-break: keep-all; position: relative; z-index: 10;">
+        ${escapeHtml(hookSentence)}
+      </p>
+      <span style="font-size: 200px; color: #FF6B50; opacity: 0.3; position: absolute; bottom: -150px; right: 0;">"</span>
     </div>
-    <div style="text-align: center;">
-      <p style="font-size: 12px; opacity: 0.5;">나의 팩폭 사주가 궁금하다면?</p>
-      <p style="font-size: 14px; font-weight: bold; color: #FF6B50; margin-top: 5px;">saju.ai</p>
+    <div style="margin-top: 150px; padding: 40px; border-top: 2px solid rgba(255,107,80,0.3); width: 80%;">
+      <p style="font-size: 40px; color: #FF6B50; font-weight: 600; margin-bottom: 20px;">사주로 본 당신의 자기기만 리포트</p>
+      <p style="font-size: 32px; opacity: 0.6;">전체 결과는 saju.ai에서 확인</p>
     </div>
   `;
   document.body.appendChild(captureDiv);
@@ -497,9 +501,9 @@ window.downloadInstaCard = async function () {
       alert('이미지 생성 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
       return;
     }
-    const canvas = await html2canvas(captureDiv, { scale: 2, useCORS: true });
+    const canvas = await html2canvas(captureDiv, { scale: 1, useCORS: true });
     const link = document.createElement('a');
-    link.download = `saju_factbomb_${Date.now()}.png`;
+    link.download = `SAJU_FACT_${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   } catch (err) {
@@ -530,7 +534,9 @@ function renderMarkdown(md) {
     if (!trimmed || !trimmed.startsWith('##')) return;
 
     const lines = trimmed.split('\n');
-    const titleLine = lines[0].replace(/^##\s*/, '').trim();
+    let titleLine = lines[0].replace(/^##\s*/, '').trim();
+    // 제목 앞 숫자·넘버링 제거 (예: "1. 오행..." → "오행...")
+    titleLine = titleLine.replace(/^\d+[.)]\s*/, '');
     const bodyLines = lines.slice(1).join('\n').trim();
 
     const card = document.createElement('div');
@@ -538,13 +544,13 @@ function renderMarkdown(md) {
 
     const titleEl = document.createElement('h2');
     titleEl.className = cardIndex === 0
-      ? 'text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2'
-      : 'text-2xl font-bold text-gray-900 mt-12 mb-4 flex items-center gap-2';
+      ? 'text-2xl font-bold text-gray-900 mb-8 flex items-center gap-2'
+      : 'text-2xl font-bold text-gray-900 mt-12 mb-8 flex items-center gap-2';
     const emoji = factBombEmojis[index % factBombEmojis.length];
     titleEl.innerHTML = `<span class="text-2xl">${emoji}</span><span>${escapeHtml(titleLine)}</span>`;
 
     const bodyEl = document.createElement('div');
-    bodyEl.className = 'prose prose-stone leading-relaxed text-gray-700';
+    bodyEl.className = 'prose prose-stone leading-relaxed text-gray-700 mt-2';
     bodyEl.innerHTML = window.marked.parse(bodyLines);
 
     card.appendChild(titleEl);
