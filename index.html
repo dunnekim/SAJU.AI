@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SAJU.AI - 🔮</title>
+    <title>SAJU.AI</title>
     
     <!-- Favicon (Emoji SVG) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>" />
@@ -54,6 +54,8 @@
 
     <!-- marked.js (Markdown renderer) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- html2canvas (인스타 스토리 공유 이미지 생성) -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <!-- Import maps: lunar-javascript (CDN only) -->
     <script type="importmap">
@@ -459,9 +461,23 @@
         >
           <div class="text-center py-12 text-gray-400">
             <p class="text-lg mb-2">🎯</p>
-            <p>생년월일을 입력하고 탐구구하기 버튼을 눌러보세요</p>
+            <p>생년월일을 입력하고 탐구하기 버튼을 눌러보세요</p>
           </div>
         </article>
+
+        <div class="mt-8 space-y-4">
+          <button 
+            type="button"
+            onclick="window.downloadInstaCard&&window.downloadInstaCard()" 
+            class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform transition hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2"
+          >
+            <span>📸</span>
+            <span>인스타 스토리에 팩폭 공유하기</span>
+          </button>
+          <div id="adContainer" class="w-full h-32 bg-gray-100 rounded-xl flex items-center justify-center border border-gray-200">
+            <p class="text-xs text-gray-400">광고 영역 (Google AdSense)</p>
+          </div>
+        </div>
       </section>
 
       <!-- 푸터 노트 -->
