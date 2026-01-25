@@ -35,74 +35,76 @@ function clearApiKey() {
 let currentMode = 'general'; // 'general' | 'compatibility' | 'career'
 
 // ------------------------------------------------------------------
-// V2.0 팩폭 프롬프트 (Fact-Bomb Engine) — 시장 경쟁력 고도화
+// [V2.5] 우아한 독설 엔진 (Elegant Brutality) + 잘림 방지 [[ ]] 훅
 // ------------------------------------------------------------------
 const baseSystemHeader = `
-ROLE: 당신은 내담자의 무의식과 자기기만을 꿰뚫어 보는 '서늘한 통찰가'입니다.
-GOAL: 내담자가 애써 외면해온 '불편한 진실'을 논리적, 구조적으로 분석하여 정신이 번쩍 들게 만드십시오.
-TONE: 
-- 격조 있는 단호함 (~입니다 체 사용).
-- 비유와 은유를 사용하되, 결론은 날카로운 비수로 마무리하십시오.
-- 넘버링(1., 2., 착각 1 등) 사용을 절대 금지합니다. 자연스러운 문장으로 이어지게 하십시오.
-- ** (볼드체) 마크다운 사용을 금지합니다.
-- 문단은 길고 깊이 있게, 각 섹션당 최소 3~4문단을 작성하십시오. 단순 사실 나열이 아닌 인과관계를 추론하는 심리 분석 에세이 형태로 서술하십시오.
+ROLE: 당신은 내담자의 잠재력을 꿰뚫어 보지만, 그 잠재력을 썩히고 있는 현실을 참지 못하는 '완벽주의자 멘토'입니다.
+GOAL: 내담자의 자존심을 세워주었다가(Praise), 논리적인 팩폭으로 부숴버려서(Crush), 결국 움직이게 만드십시오.
+TONE:
+- 격조 높고 정중한 "~입니다" 체를 사용하십시오.
+- 저급한 비난이 아닌, 뼈아픈 통찰을 전달하십시오.
+- **볼드체** 사용 금지. 넘버링(1. 2.) 금지.
+- 섹션당 분량은 충분히 길게(3~4문단) 유지하십시오.
+
+[CRITICAL RULE]:
+답변의 맨 마지막 줄에 반드시 인스타그램 공유용 한 줄 요약을 대괄호 이중겹 [[ ]] 안에 작성하십시오.
+이 문장은 40자 이내의 짧고 강렬한 '비수'여야 합니다.
+예시: [[재능을 믿고 노력을 멈춘 순간, 당신의 추락은 시작되었습니다.]]
 `;
 
 const generalInstruction = `
 ${baseSystemHeader}
 
 [출력 섹션 구성]
-## 오행의 불균형이 초래한 성격적 결함
-(오행의 과다와 결핍이 어떻게 내담자의 인생을 망치고 있는지 구조적으로 서술하십시오. 단순 나열이 아닌, 기운의 흐름이 막힌 지점을 지적하십시오.)
+## 💎 당신이라는 원석의 가치
+(사주의 장점을 찾아 극찬하십시오. 당신이 얼마나 큰 그릇을 가졌는지, 어떤 재능이 숨어있는지 구체적으로 명시하여 기분을 띄워주십시오.)
 
-## 당신이 스스로를 속이고 있는 가짜 위안
-(착각 1, 착각 2 같은 넘버링 없이, 내담자가 방어기제로 삼고 있는 논리를 무너뜨리십시오. 스스로를 합리화하는 지점을 정확히 타격하십시오.)
+## 📉 재능을 썩히고 있는 치명적 모순
+("그러나..."로 시작하여 분위기를 반전시키십시오. 그 좋은 재능을 가지고도 왜 지금 이 모양인지, 오행의 불균형과 나태함을 근거로 무자비하게 팩폭하십시오. 2배 강도.)
 
-## 현재의 패턴이 불러올 비참한 미래의 초상
-(이 습관이 5년 유지되었을 때 마주할 구체적인 정체 상태와 손실을 서술하십시오.)
+## 👁️ 이대로 5년이 흘렀을 때의 비극
+(변화 없이 현재의 안일한 태도를 유지할 경우 맞이할 초라한 미래를 그림 그려지듯 서술하십시오.)
 
-## 마지막으로 마주해야 할 단 하나의 질문
-(인생을 송두리째 바꿀 수 있지만, 두려워서 외면하는 질문을 던지십시오. 이 섹션의 마지막 문장은 인스타 공유용으로 쓰일 '한 줄 팩폭'으로 날카롭게 마무리하십시오.)
+## 🗝️ 껍질을 깨기 위한 마지막 질문
+(회피하고 있는 본질적인 질문을 던지십시오. 행동하지 않으면 아무것도 변하지 않음을 경고하십시오.)
 `;
 
 const compatibilityInstruction = `
 ${baseSystemHeader}
-CONTEXT: 두 사람의 사주 데이터를 비교하여 관계의 '권력 구조'와 '파국 가능성'을 분석합니다.
 
 [출력 섹션 구성]
-## 권력의 기울기
-(감정적 우위에 있는 사람과 끌려다니는 사람을 명확히 지적하십시오. 넘버링 없이 연속된 문단으로 서술하십시오.)
+## 💎 두 우주가 만난 기적
+(두 사람의 인연이 얼마나 특별하고 귀한지, 서로에게 어떤 긍정적 시너지를 줄 수 있는지 아름답게 묘사하십시오.)
 
-## 서로가 착각하는 사랑의 방식
-(상대는 원하지 않는데 본인만 퍼주고 있는 헛발질 포인트를 넘버링 없이 논리적으로 파헤치십시오.)
+## 💔 관계를 망치는 결정적 오만
+("하지만..."으로 반전. 서로에 대한 착각, 이기심, 배려 없는 태도가 어떻게 관계를 좀먹고 있는지 적나라하게 지적하십시오.)
 
-## 필연적 파국 포인트
-(성격 차이, 가치관 충돌 등 관계를 끝장낼 수 있는 시한폭탄을 구조적으로 지적하십시오.)
+## ⚡ 파국의 시나리오
+(이 문제를 방치했을 때 두 사람이 겪게 될 이별의 과정이나 쇼윈도 부부 같은 미래를 경고하십시오.)
 
-## 관계 유지를 위한 냉정한 비용
-(이 관계를 지속하기 위해 각자가 감수해야 할 손해와 비용을 서술하십시오. 마지막 문장은 인스타 공유용 '한 줄 팩폭'으로 마무리하십시오.)
+## 🗝️ 사랑을 지키기 위한 현실적 대가
+(관계를 유지하려면 각자 무엇을 포기하고 희생해야 하는지 냉정하게 계산서를 내미십시오.)
 `;
 
 const careerInstruction = `
 ${baseSystemHeader}
-CONTEXT: 당신은 채용 결정권자이자 연봉 협상 테이블의 냉혈한 매니저입니다.
 CAREER_STATUS 반영: 
-- seeking(취준): "주제 파악 못하는 이상주의"를 지적하십시오.
-- burnout(현타): "배부른 투정" 혹은 "무능력의 회피"를 지적하십시오.
-- moving(탈주): "도피성 이직"의 위험성을 경고하십시오.
+- seeking(취준): 높은 눈높이와 낮은 실행력 비판
+- burnout(현타): 배부른 투정과 자기연민 비판
+- moving(탈주): 도피성 회피와 끈기 부족 비판
 
 [출력 섹션 구성]
-## 시장가치 팩트체크
-(냉정한 시장의 관점에서 내담자의 거품 낀 자신감을 넘버링 없이 구조적으로 지적하십시오.)
+## 💎 시장이 탐내는 당신의 무기
+(내담자가 가진 직무적 강점과 잠재력을 시장 가치 관점에서 높게 평가하십시오.)
 
-## 이력서의 치명적 구멍
-(면접관이 보자마자 탈락시킬 만한 약점과 태도 문제를 인과관계를 담아 서술하십시오.)
+## 📉 당신의 이력서가 휴지통으로 가는 이유
+(그 좋은 무기를 가지고도 왜 성과가 없는지, 태도와 마인드셋의 결함을 면접관 시점으로 독설하십시오.)
 
-## 5년 후 당신의 명함
-(변화 없이 현재 상태가 유지될 경우 갖게 될 초라한 타이틀을 서술하십시오.)
+## 👁️ 5년 후, 당신의 명함은 없다
+(지금의 나태함이나 착각을 고치지 않으면 도태될 수밖에 없는 미래를 보여주십시오.)
 
-## 성공을 위해 당장 버려야 할 집착
-(성공 확률을 낮추는 쓸데없는 고집이나 습관을 지적하십시오. 마지막 문장은 인스타 공유용 '한 줄 팩폭'으로 마무리하십시오.)
+## 🗝️ 성공을 위해 당장 버려야 할 것
+(거창한 계획 말고, 당장 갖다 버려야 할 쓸데없는 습관이나 자존심을 지적하십시오.)
 `;
 
 function summarizeCounts(counts) {
@@ -326,15 +328,15 @@ export async function analyzeSaju({ sajuJson, mode = 'general' }) {
   switch (mode) {
     case 'compatibility':
       systemInstruction = compatibilityInstruction;
-      userPrompt = `두 사람의 사주(나/상대)임:\n${jsonStr}`;
+      userPrompt = `두 사람의 사주 정보입니다:\n${jsonStr}`;
       break;
     case 'career':
       systemInstruction = careerInstruction;
-      userPrompt = `내 사주와 직업 상태(${sajuJson.birth_info?.career_status || 'seeking'})임:\n${jsonStr}`;
+      userPrompt = `내 사주와 직업 상태(${sajuJson.birth_info?.career_status || 'seeking'})입니다:\n${jsonStr}`;
       break;
     default:
       systemInstruction = generalInstruction;
-      userPrompt = `내 사주 데이터임:\n${jsonStr}`;
+      userPrompt = `내 사주 정보입니다:\n${jsonStr}`;
   }
 
   const resp = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -345,8 +347,8 @@ export async function analyzeSaju({ sajuJson, mode = 'general' }) {
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
-      temperature: 0.1,
-      max_tokens: 1500,
+      temperature: 0.2,
+      max_tokens: 2500,
       messages: [
         { role: "system", content: systemInstruction },
         { role: "user", content: userPrompt },
@@ -448,7 +450,7 @@ function clearStatus() {
   statusEl.textContent = "";
 }
 
-// 인스타 스토리 공유 카드 — 명언 카드 (9:16, 마지막 한 문장만)
+// 인스타 스토리 공유 카드 — [[ ]] 훅 우선 (잘림 방지), 없으면 마지막 문장 폴백
 function escapeHtml(s) {
   const div = document.createElement('div');
   div.textContent = s;
@@ -463,35 +465,39 @@ window.downloadInstaCard = async function () {
     return;
   }
 
-  const lastSection = sections[sections.length - 1];
-  const proseEl = lastSection ? lastSection.querySelector('.prose') : null;
-  const fullText = proseEl ? proseEl.innerText : '';
-  const sentences = fullText.split(/[.!?]\s/).filter(s => s.trim().length > 5);
-  const hookSentence = sentences.length > 0
-    ? (sentences[sentences.length - 1].replace(/[.]$/, '') || '인생을 바꾸고 싶다면 고통을 마주하십시오.')
-    : '당신은 정말 이대로 살 것인가?';
+  let hookText = window.__sajuHookText || '';
+  if (!hookText.trim()) {
+    const lastSection = sections[sections.length - 1];
+    const proseEl = lastSection ? lastSection.querySelector('.prose') : null;
+    const fullText = proseEl ? proseEl.innerText : '';
+    const sentences = fullText.split(/[.!?]\s/).filter(s => s.trim().length > 5);
+    hookText = sentences.length > 0
+      ? (sentences[sentences.length - 1].replace(/[.]$/, '') || '인생을 바꾸고 싶다면 고통을 마주하십시오.')
+      : '당신의 잠재력은 게으름에 묻혔습니다.';
+  }
 
   const captureDiv = document.createElement('div');
   captureDiv.style.cssText = `
     position: fixed; top: -9999px; left: -9999px; width: 1080px; height: 1920px;
-    background: #1a1a1a; color: white; padding: 100px 80px; box-sizing: border-box;
-    font-family: 'Pretendard', sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+    background: linear-gradient(180deg, #111111 0%, #2a2a2a 100%);
+    color: white; padding: 120px 80px; box-sizing: border-box;
+    font-family: 'Pretendard', sans-serif; display: flex; flex-direction: column; justify-content: space-between; text-align: center;
   `;
   captureDiv.innerHTML = `
-    <div style="margin-bottom: 120px; opacity: 0.8;">
-      <span style="font-size: 120px;">🔮</span>
-      <h1 style="font-size: 60px; font-weight: 800; color: #FF6B50; margin-top: 40px; letter-spacing: 10px;">SAJU.AI</h1>
+    <div>
+      <div style="font-size: 100px; margin-bottom: 20px;">🔮</div>
+      <h1 style="font-size: 50px; font-weight: 800; color: #FF6B50; letter-spacing: 8px;">SAJU.AI</h1>
     </div>
-    <div style="width: 100%; position: relative;">
-      <span style="font-size: 200px; color: #FF6B50; opacity: 0.3; position: absolute; top: -150px; left: 0;">"</span>
-      <p style="font-size: 72px; line-height: 1.4; font-weight: 700; word-break: keep-all; position: relative; z-index: 10;">
-        ${escapeHtml(hookSentence)}
-      </p>
-      <span style="font-size: 200px; color: #FF6B50; opacity: 0.3; position: absolute; bottom: -150px; right: 0;">"</span>
+    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+      <div style="border-left: 10px solid #FF6B50; padding-left: 60px; text-align: left;">
+        <p style="font-size: 80px; line-height: 1.3; font-weight: 700; word-break: keep-all; color: #ffffff;">
+          ${escapeHtml(hookText)}
+        </p>
+      </div>
     </div>
-    <div style="margin-top: 150px; padding: 40px; border-top: 2px solid rgba(255,107,80,0.3); width: 80%;">
-      <p style="font-size: 40px; color: #FF6B50; font-weight: 600; margin-bottom: 20px;">사주로 본 당신의 자기기만 리포트</p>
-      <p style="font-size: 32px; opacity: 0.6;">전체 결과는 saju.ai에서 확인</p>
+    <div style="border-top: 2px solid rgba(255,255,255,0.1); padding-top: 60px;">
+      <p style="font-size: 36px; color: #888;">나를 꿰뚫어보는 AI 분석</p>
+      <p style="font-size: 40px; font-weight: bold; margin-top: 20px; color: #FF6B50;">saju.ai</p>
     </div>
   `;
   document.body.appendChild(captureDiv);
@@ -503,7 +509,7 @@ window.downloadInstaCard = async function () {
     }
     const canvas = await html2canvas(captureDiv, { scale: 1, useCORS: true });
     const link = document.createElement('a');
-    link.download = `SAJU_FACT_${Date.now()}.png`;
+    link.download = `SAJU_CARD_${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   } catch (err) {
@@ -516,16 +522,20 @@ window.downloadInstaCard = async function () {
 
 function renderMarkdown(md) {
   if (!resultEl) return;
-  
+
+  const hookMatch = md.match(/\[\[([\s\S]*?)\]\]/);
+  window.__sajuHookText = hookMatch ? hookMatch[1].trim() : null;
+  const cleanMd = md.replace(/\[\[[\s\S]*?\]\]/g, '').trim();
+
   if (!window.marked || typeof window.marked.parse !== "function") {
-    resultEl.textContent = md;
+    resultEl.textContent = cleanMd;
     return;
   }
 
   window.marked.setOptions({ mangle: false, headerIds: false });
-  const sections = md.split(/\n(?=## )/g);
+  const sections = cleanMd.split(/\n(?=## )/g);
   resultEl.innerHTML = '';
-  
+
   const factBombEmojis = ['☠️', '🤡', '📉', '💣', '🩸'];
   let cardIndex = 0;
 
