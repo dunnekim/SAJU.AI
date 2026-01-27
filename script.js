@@ -223,8 +223,11 @@ const LOADING_SCRIPTS = [
   { progress: 95, text: "당신의 심연을 텍스트로 변환하는 중..." },
 ];
 
+const API_URL = "https://fate-ai-rgea.onrender.com/api/analyze";
+
 export async function analyzeSaju({ sajuJson, mode = "general" }) {
-  const apiPromise = fetch("/api/analyze", {
+  console.log(`📡 Calling Brain: ${API_URL}`);
+  const apiPromise = fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ sajuJson, mode }),
@@ -378,7 +381,7 @@ window.downloadInstaCard = async function () {
     </div>
     <div style="border-top: 2px solid #333; padding-top: 60px;">
       <p style="font-size: 32px; color: #666; letter-spacing: 2px;">당신의 어둠을 읽다</p>
-      <p style="font-size: 36px; font-weight: bold; margin-top: 20px; color: #FF4500;">saju.ai</p>
+      <p style="font-size: 36px; font-weight: bold; margin-top: 20px; color: #FF4500;">fate.ai</p>
     </div>
   `;
   document.body.appendChild(captureDiv);
