@@ -32,13 +32,16 @@ function parseEnvFile(envPath) {
   }
 }
 
-const env = parseEnvFile(path.join(__dirname, ".env"));
-const OPENAI_API_KEY = env.OPENAI_API_KEY;
-const SUPABASE_URL = env.SUPABASE_URL;
-const SUPABASE_KEY = env.SUPABASE_KEY;
+// 하이브리드 환경변수: 1순위 process.env(클라우드), 2순위 .env 파일(로컬)
+const fileEnv = parseEnvFile(path.join(__dirname, ".env"));
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || fileEnv.OPENAI_API_KEY;
+const SUPABASE_URL = process.env.SUPABASE_URL || fileEnv.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY || fileEnv.SUPABASE_KEY;
 
 if (!OPENAI_API_KEY || !SUPABASE_URL || !SUPABASE_KEY) {
-  console.error("❌ 오류: .env 파일에 OPENAI_API_KEY, SUPABASE_URL, SUPABASE_KEY가 모두 있어야 합니다.");
+  console.error("❌ [CRITICAL] API 키가 누락되었습니다.");
+  console.error("- Render 대시보드의 'Environment' 탭에 키를 입력했는지 확인하세요.");
+  console.error("- 로컬 실행이라면 .env 파일이 있는지 확인하세요.");
   process.exit(1);
 }
 
@@ -129,7 +132,28 @@ function safeJoin(root, requestPath) {
   return path.join(root, normalized);
 }
 
+const ALLOWED_ORIGINS = [
+  "http://localhost:5500",
+  "https://fate-ai-rgea.onrender.com",
+  "https://fate.ai.kr",
+  "https://www.fate.ai.kr",
+  "https://dunnekim.github.io",
+];
+
 const server = http.createServer(async (req, res) => {
+  const origin = req.headers.origin || "";
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   const reqUrl = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
   const pathname = reqUrl.pathname || "/";
 
