@@ -32,7 +32,7 @@ function parseEnvFile(envPath) {
   }
 }
 
-// 하이브리드 환경변수: 1순위 process.env(클라우드), 2순위 .env 파일(로컬)
+// [Hybrid Env] 1순위 process.env(Render 등 클라우드), 2순위 .env(로컬)
 const fileEnv = parseEnvFile(path.join(__dirname, ".env"));
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || fileEnv.OPENAI_API_KEY;
 const SUPABASE_URL = process.env.SUPABASE_URL || fileEnv.SUPABASE_URL;
@@ -132,18 +132,19 @@ function safeJoin(root, requestPath) {
   return path.join(root, normalized);
 }
 
+// [CORS] 허용 도메인 화이트리스트 (fate.ai.kr 배포용)
 const ALLOWED_ORIGINS = [
   "http://localhost:5500",
-  "https://fate-ai-rgea.onrender.com",
-  "https://fate.ai.kr",
-  "https://www.fate.ai.kr",
-  "https://dunnekim.github.io",
+  "https://fate-ai-rgea.onrender.com",  // Render 서버 자기 자신
+  "https://fate.ai.kr",                 // 메인 도메인
+  "https://www.fate.ai.kr",             // www 서브도메인
+  "https://dunnekim.github.io",         // GitHub Pages
 ];
 
 const server = http.createServer(async (req, res) => {
-  const origin = req.headers.origin || "";
-  if (ALLOWED_ORIGINS.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.includes(origin) || !origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
   }
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");

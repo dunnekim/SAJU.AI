@@ -223,10 +223,11 @@ const LOADING_SCRIPTS = [
   { progress: 95, text: "당신의 심연을 텍스트로 변환하는 중..." },
 ];
 
-const API_URL = "https://fate-ai-rgea.onrender.com/api/analyze";
-
 export async function analyzeSaju({ sajuJson, mode = "general" }) {
-  console.log(`📡 Calling Brain: ${API_URL}`);
+  // [배포용] Render 실제 운영 서버 주소
+  const API_URL = "https://fate-ai-rgea.onrender.com/api/analyze";
+  console.log(`📡 Sending Request to: ${API_URL}`);
+
   const apiPromise = fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
