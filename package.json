@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "@supabase/supabase-js": "^2.93.1"
+  },
+  "name": "shadow-report",
+  "version": "3.5.0",
+  "description": "당신의 내면을 읽는 심리 분석 웹앱입니다.  \r 만세력 계산은 코드가 결정론적으로 처리하고, 심리 분석은 AI가 담당합니다.",
+  "main": "script.js",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dunnekim/SAJU.AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/dunnekim/SAJU.AI/issues"
+  },
+  "homepage": "https://github.com/dunnekim/SAJU.AI#readme"
+}

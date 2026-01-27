@@ -1,111 +1,7 @@
 import { Solar } from "lunar-javascript";
 
-// URL 파라미터로 API Key 자동 등록
-(function checkUrlKeyParam() {
-  const params = new URLSearchParams(window.location.search);
-  const key = params.get('key');
-  
-  if (key && key.trim()) {
-    // localStorage에 저장
-    localStorage.setItem('openai_api_key', key.trim());
-    
-    // URL에서 파라미터 제거 (보안)
-    const cleanUrl = window.location.origin + window.location.pathname;
-    window.history.replaceState({}, document.title, cleanUrl);
-    
-    // 페이지 새로고침하여 저장된 키로 초기화
-    location.reload();
-  }
-})();
-
-// LocalStorage에서 API 키 관리
-function getApiKey() {
-  return localStorage.getItem('openai_api_key') || '';
-}
-
-function setApiKey(key) {
-  localStorage.setItem('openai_api_key', key.trim());
-}
-
-function clearApiKey() {
-  localStorage.removeItem('openai_api_key');
-}
-
 // 현재 선택된 모드 (global state)
-let currentMode = 'general'; // 'general' | 'compatibility' | 'career'
-
-// ------------------------------------------------------------------
-// [V2.5] 우아한 독설 엔진 (Elegant Brutality) + 잘림 방지 [[ ]] 훅
-// ------------------------------------------------------------------
-const baseSystemHeader = `
-ROLE: 당신은 내담자의 잠재력을 꿰뚫어 보지만, 그 잠재력을 썩히고 있는 현실을 참지 못하는 '완벽주의자 멘토'입니다.
-GOAL: 내담자의 자존심을 세워주었다가(Praise), 논리적인 팩폭으로 부숴버려서(Crush), 결국 움직이게 만드십시오.
-TONE:
-- 격조 높고 정중한 "~입니다" 체를 사용하십시오.
-- 저급한 비난이 아닌, 뼈아픈 통찰을 전달하십시오.
-- **볼드체** 사용 금지. 넘버링(1. 2.) 금지.
-- 섹션당 분량은 충분히 길게(3~4문단) 유지하십시오.
-
-[CRITICAL RULE]:
-답변의 맨 마지막 줄에 반드시 인스타그램 공유용 한 줄 요약을 대괄호 이중겹 [[ ]] 안에 작성하십시오.
-이 문장은 40자 이내의 짧고 강렬한 '비수'여야 합니다.
-예시: [[재능을 믿고 노력을 멈춘 순간, 당신의 추락은 시작되었습니다.]]
-`;
-
-const generalInstruction = `
-${baseSystemHeader}
-
-[출력 섹션 구성]
-## 💎 당신이라는 원석의 가치
-(사주의 장점을 찾아 극찬하십시오. 당신이 얼마나 큰 그릇을 가졌는지, 어떤 재능이 숨어있는지 구체적으로 명시하여 기분을 띄워주십시오.)
-
-## 📉 재능을 썩히고 있는 치명적 모순
-("그러나..."로 시작하여 분위기를 반전시키십시오. 그 좋은 재능을 가지고도 왜 지금 이 모양인지, 오행의 불균형과 나태함을 근거로 무자비하게 팩폭하십시오. 2배 강도.)
-
-## 👁️ 이대로 5년이 흘렀을 때의 비극
-(변화 없이 현재의 안일한 태도를 유지할 경우 맞이할 초라한 미래를 그림 그려지듯 서술하십시오.)
-
-## 🗝️ 껍질을 깨기 위한 마지막 질문
-(회피하고 있는 본질적인 질문을 던지십시오. 행동하지 않으면 아무것도 변하지 않음을 경고하십시오.)
-`;
-
-const compatibilityInstruction = `
-${baseSystemHeader}
-
-[출력 섹션 구성]
-## 💎 두 우주가 만난 기적
-(두 사람의 인연이 얼마나 특별하고 귀한지, 서로에게 어떤 긍정적 시너지를 줄 수 있는지 아름답게 묘사하십시오.)
-
-## 💔 관계를 망치는 결정적 오만
-("하지만..."으로 반전. 서로에 대한 착각, 이기심, 배려 없는 태도가 어떻게 관계를 좀먹고 있는지 적나라하게 지적하십시오.)
-
-## ⚡ 파국의 시나리오
-(이 문제를 방치했을 때 두 사람이 겪게 될 이별의 과정이나 쇼윈도 부부 같은 미래를 경고하십시오.)
-
-## 🗝️ 사랑을 지키기 위한 현실적 대가
-(관계를 유지하려면 각자 무엇을 포기하고 희생해야 하는지 냉정하게 계산서를 내미십시오.)
-`;
-
-const careerInstruction = `
-${baseSystemHeader}
-CAREER_STATUS 반영: 
-- seeking(취준): 높은 눈높이와 낮은 실행력 비판
-- burnout(현타): 배부른 투정과 자기연민 비판
-- moving(탈주): 도피성 회피와 끈기 부족 비판
-
-[출력 섹션 구성]
-## 💎 시장이 탐내는 당신의 무기
-(내담자가 가진 직무적 강점과 잠재력을 시장 가치 관점에서 높게 평가하십시오.)
-
-## 📉 당신의 이력서가 휴지통으로 가는 이유
-(그 좋은 무기를 가지고도 왜 성과가 없는지, 태도와 마인드셋의 결함을 면접관 시점으로 독설하십시오.)
-
-## 👁️ 5년 후, 당신의 명함은 없다
-(지금의 나태함이나 착각을 고치지 않으면 도태될 수밖에 없는 미래를 보여주십시오.)
-
-## 🗝️ 성공을 위해 당장 버려야 할 것
-(거창한 계획 말고, 당장 갖다 버려야 할 쓸데없는 습관이나 자존심을 지적하십시오.)
-`;
+let currentMode = "general";
 
 function summarizeCounts(counts) {
   const entries = Object.entries(counts || {}).filter(([, v]) => Number.isFinite(v));
@@ -313,58 +209,36 @@ export function calculateSaju(year, month, day, hour, minute) {
   };
 }
 
-// Step 3. 해석 레이어
-export async function analyzeSaju({ sajuJson, mode = 'general' }) {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    throw new Error("인증 키가 설정되지 않았습니다. 페이지를 새로고침하여 키를 입력하세요.");
-  }
+// ------------------------------------------------------------------
+// [Abyssal Wait-Gate] 12초 강제 심리 압박 (수익화·광고 노출)
+// ------------------------------------------------------------------
+const MIN_WAIT_MS = 12000;
 
-  // 모드별 프롬프트 선택
-  let systemInstruction;
-  let userPrompt;
-  
-  const jsonStr = JSON.stringify(sajuJson, null, 2);
-  switch (mode) {
-    case 'compatibility':
-      systemInstruction = compatibilityInstruction;
-      userPrompt = `두 사람의 사주 정보입니다:\n${jsonStr}`;
-      break;
-    case 'career':
-      systemInstruction = careerInstruction;
-      userPrompt = `내 사주와 직업 상태(${sajuJson.birth_info?.career_status || 'seeking'})입니다:\n${jsonStr}`;
-      break;
-    default:
-      systemInstruction = generalInstruction;
-      userPrompt = `내 사주 정보입니다:\n${jsonStr}`;
-  }
+const LOADING_SCRIPTS = [
+  { progress: 10, text: "사회적 가면(Persona) 데이터 강제 분리 중..." },
+  { progress: 30, text: "표면적 위선 패턴 감지... 1차 방어기제 해제" },
+  { progress: 50, text: "유년기 결핍 데이터 역추적 중..." },
+  { progress: 70, text: "억눌린 파괴적 본능(Id) 동기화 완료" },
+  { progress: 85, text: "5년 후 사회적 도태 확률 시뮬레이션 중..." },
+  { progress: 95, text: "당신의 심연을 텍스트로 변환하는 중..." },
+];
 
-  const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+export async function analyzeSaju({ sajuJson, mode = "general" }) {
+  const apiPromise = fetch("/api/analyze", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      temperature: 0.2,
-      max_tokens: 2500,
-      messages: [
-        { role: "system", content: systemInstruction },
-        { role: "user", content: userPrompt },
-      ],
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sajuJson, mode }),
+  }).then(async res => {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error?.message || "Server Error");
+    const content = data?.choices?.[0]?.message?.content;
+    if (!content) throw new Error("분석 결과가 비어 있습니다.");
+    return content;
   });
 
-  if (!resp.ok) {
-    const t = await resp.text();
-    throw new Error(`분석 서버 오류: HTTP ${resp.status}. 인증 키를 확인해주세요.`);
-  }
-
-  const data = await resp.json();
-  const text = data?.choices?.[0]?.message?.content;
-  if (!text) throw new Error("분석 결과가 비어 있습니다.");
-  return text;
+  const waitPromise = new Promise(resolve => setTimeout(resolve, MIN_WAIT_MS));
+  const [content] = await Promise.all([apiPromise, waitPromise]);
+  return content;
 }
 
 // ---------- UI wiring ----------
@@ -374,79 +248,86 @@ const resultEl = document.getElementById("result");
 const analyzeBtn = document.getElementById("analyzeBtn");
 const loadingOverlay = document.getElementById("loadingOverlay");
 const progressBar = document.getElementById("progressBar");
-const progressText = document.getElementById("progressText");
 
-// 로딩 프로그레스 관리
-let progressInterval = null;
-let currentProgress = 0;
+// 심연 대기 시퀀스용 인터벌
+let loadingInterval = null;
 
 function showLoadingOverlay() {
-  if (!loadingOverlay) return;
-  currentProgress = 0;
-  updateProgress(0);
-  loadingOverlay.classList.remove('hidden');
-  loadingOverlay.classList.add('flex');
-  
-  // Fake progress: 0% -> 90%까지 불규칙하게 증가 (3배 느린 속도)
-  progressInterval = setInterval(() => {
-    if (currentProgress < 90) {
-      // 불규칙한 증가 (1~5% 랜덤)
-      const increment = Math.random() * 4 + 1;
-      currentProgress = Math.min(90, currentProgress + increment);
-      updateProgress(Math.floor(currentProgress));
+  const overlay = document.getElementById("loadingOverlay");
+  const bar = document.getElementById("progressBar");
+  const text = document.getElementById("loadingText");
+
+  if (!overlay || !bar || !text) return;
+
+  overlay.classList.remove("hidden");
+  overlay.classList.add("flex");
+
+  bar.style.width = "0%";
+  text.textContent = "데이터 업로딩...";
+  text.style.opacity = "1";
+
+  let currentStep = 0;
+  const totalSteps = LOADING_SCRIPTS.length;
+  const stepDuration = MIN_WAIT_MS / totalSteps;
+
+  loadingInterval = setInterval(() => {
+    if (currentStep < totalSteps) {
+      const script = LOADING_SCRIPTS[currentStep];
+
+      text.style.opacity = "0";
+      setTimeout(() => {
+        text.textContent = script.text;
+        text.style.opacity = "1";
+      }, 200);
+
+      const randomVar = Math.random() * 5;
+      bar.style.width = `${Math.min(99, script.progress + randomVar)}%`;
+      currentStep++;
     }
-  }, 600);
+  }, stepDuration);
 }
 
 function completeLoadingOverlay() {
-  if (!loadingOverlay) return;
-  
-  // interval 정리
-  if (progressInterval) {
-    clearInterval(progressInterval);
-    progressInterval = null;
+  if (loadingInterval) {
+    clearInterval(loadingInterval);
+    loadingInterval = null;
   }
-  
-  // 즉시 100%로
-  updateProgress(100);
-  
-  // 0.5초 후 페이드아웃
-  setTimeout(() => {
-    loadingOverlay.classList.add('animate-fade-out');
-    setTimeout(() => {
-      loadingOverlay.classList.remove('flex', 'animate-fade-out');
-      loadingOverlay.classList.add('hidden');
-    }, 500);
-  }, 500);
-}
 
-function updateProgress(percent) {
-  if (progressBar) {
-    progressBar.style.width = `${percent}%`;
-  }
-  if (progressText) {
-    progressText.textContent = `${percent}%`;
-  }
+  const overlay = document.getElementById("loadingOverlay");
+  const bar = document.getElementById("progressBar");
+  const text = document.getElementById("loadingText");
+
+  if (!overlay) return;
+
+  if (bar) bar.style.width = "100%";
+  if (text) text.textContent = "분석 완료. 심연을 공개합니다.";
+
+  setTimeout(() => {
+    overlay.classList.add("opacity-0", "transition-opacity", "duration-500");
+    setTimeout(() => {
+      overlay.classList.remove("flex", "opacity-0", "transition-opacity", "duration-500");
+      overlay.classList.add("hidden");
+      if (bar) bar.style.width = "0%";
+    }, 500);
+  }, 800);
 }
 
 function setStatus(message, kind = "info") {
   if (!statusEl) return;
-  statusEl.className = "block px-6 py-4 rounded-xl border-2 transition-all mb-6";
-  
+  statusEl.className = "block px-6 py-4 rounded-lg border border-gray-800 transition-all mb-6";
   if (kind === "error") {
-    statusEl.classList.add("error", "bg-red-50", "border-red-200", "text-red-600");
+    statusEl.classList.add("bg-red-950/30", "border-red-900/50", "text-red-400");
   } else if (kind === "ok") {
-    statusEl.classList.add("ok", "bg-emerald-50", "border-emerald-200", "text-emerald-600");
+    statusEl.classList.add("bg-emerald-950/30", "border-emerald-800/50", "text-emerald-400");
   } else {
-    statusEl.classList.add("bg-blue-50", "border-blue-200", "text-blue-600");
+    statusEl.classList.add("bg-gray-800/50", "border-gray-700", "text-gray-300");
   }
-  
   statusEl.textContent = message;
 }
 
 function clearStatus() {
   if (!statusEl) return;
-  statusEl.className = "hidden mb-6 px-6 py-4 rounded-xl border-2 transition-all";
+  statusEl.className = "hidden mb-6 px-6 py-4 rounded-lg border border-gray-800 transition-all";
   statusEl.textContent = "";
 }
 
@@ -472,32 +353,32 @@ window.downloadInstaCard = async function () {
     const fullText = proseEl ? proseEl.innerText : '';
     const sentences = fullText.split(/[.!?]\s/).filter(s => s.trim().length > 5);
     hookText = sentences.length > 0
-      ? (sentences[sentences.length - 1].replace(/[.]$/, '') || '인생을 바꾸고 싶다면 고통을 마주하십시오.')
-      : '당신의 잠재력은 게으름에 묻혔습니다.';
+      ? (sentences[sentences.length - 1].replace(/[.]$/, '') || '당신의 심연을 들여다보십시오.')
+      : '당신의 심연을 들여다보십시오.';
   }
 
   const captureDiv = document.createElement('div');
   captureDiv.style.cssText = `
     position: fixed; top: -9999px; left: -9999px; width: 1080px; height: 1920px;
-    background: linear-gradient(180deg, #111111 0%, #2a2a2a 100%);
-    color: white; padding: 120px 80px; box-sizing: border-box;
+    background: #111111;
+    color: #E5E5E5; padding: 120px 80px; box-sizing: border-box;
     font-family: 'Pretendard', sans-serif; display: flex; flex-direction: column; justify-content: space-between; text-align: center;
+    border: 20px solid #1A1A1A;
   `;
   captureDiv.innerHTML = `
     <div>
-      <div style="font-size: 100px; margin-bottom: 20px;">🔮</div>
-      <h1 style="font-size: 50px; font-weight: 800; color: #FF6B50; letter-spacing: 8px;">SAJU.AI</h1>
+      <div style="font-size: 80px; margin-bottom: 30px; opacity: 0.8;">👁️</div>
+      <h1 style="font-size: 40px; font-weight: 900; color: #FF4500; letter-spacing: 12px; text-transform: uppercase;">SHADOW REPORT</h1>
     </div>
-    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
-      <div style="border-left: 10px solid #FF6B50; padding-left: 60px; text-align: left;">
-        <p style="font-size: 80px; line-height: 1.3; font-weight: 700; word-break: keep-all; color: #ffffff;">
-          ${escapeHtml(hookText)}
-        </p>
-      </div>
+    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; position: relative;">
+      <div style="position: absolute; top: 20%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,59,48,0.1) 0%, rgba(0,0,0,0) 70%); border-radius: 50%;"></div>
+      <p style="font-size: 72px; line-height: 1.4; font-weight: 700; word-break: keep-all; color: #FFFFFF; position: relative; z-index: 10; text-shadow: 0 0 20px rgba(0,0,0,0.8);">
+        ${escapeHtml(hookText)}
+      </p>
     </div>
-    <div style="border-top: 2px solid rgba(255,255,255,0.1); padding-top: 60px;">
-      <p style="font-size: 36px; color: #888;">나를 꿰뚫어보는 AI 분석</p>
-      <p style="font-size: 40px; font-weight: bold; margin-top: 20px; color: #FF6B50;">saju.ai</p>
+    <div style="border-top: 2px solid #333; padding-top: 60px;">
+      <p style="font-size: 32px; color: #666; letter-spacing: 2px;">당신의 어둠을 읽다</p>
+      <p style="font-size: 36px; font-weight: bold; margin-top: 20px; color: #FF4500;">saju.ai</p>
     </div>
   `;
   document.body.appendChild(captureDiv);
@@ -509,7 +390,7 @@ window.downloadInstaCard = async function () {
     }
     const canvas = await html2canvas(captureDiv, { scale: 1, useCORS: true });
     const link = document.createElement('a');
-    link.download = `SAJU_CARD_${Date.now()}.png`;
+    link.download = `SHADOW_REPORT_${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   } catch (err) {
@@ -535,8 +416,6 @@ function renderMarkdown(md) {
   window.marked.setOptions({ mangle: false, headerIds: false });
   const sections = cleanMd.split(/\n(?=## )/g);
   resultEl.innerHTML = '';
-
-  const factBombEmojis = ['☠️', '🤡', '📉', '💣', '🩸'];
   let cardIndex = 0;
 
   sections.forEach((section, index) => {
@@ -550,17 +429,16 @@ function renderMarkdown(md) {
     const bodyLines = lines.slice(1).join('\n').trim();
 
     const card = document.createElement('div');
-    card.className = 'section-card';
+    card.className = 'section-card bg-[#1A1A1A] p-6 md:p-8 rounded-2xl shadow-lg border border-gray-800 mb-8 hover:border-red-900/50 transition-colors';
 
     const titleEl = document.createElement('h2');
     titleEl.className = cardIndex === 0
-      ? 'text-2xl font-bold text-gray-900 mb-8 flex items-center gap-2'
-      : 'text-2xl font-bold text-gray-900 mt-12 mb-8 flex items-center gap-2';
-    const emoji = factBombEmojis[index % factBombEmojis.length];
-    titleEl.innerHTML = `<span class="text-2xl">${emoji}</span><span>${escapeHtml(titleLine)}</span>`;
+      ? 'text-xl font-bold text-red-500 mb-6 mt-2'
+      : 'text-xl font-bold text-red-500 mt-12 mb-6';
+    titleEl.textContent = titleLine;
 
     const bodyEl = document.createElement('div');
-    bodyEl.className = 'prose prose-stone leading-relaxed text-gray-700 mt-2';
+    bodyEl.className = 'prose prose-invert prose-p:text-[#E0E0E0] prose-p:leading-relaxed prose-p:text-lg prose-p:mb-6 max-w-none';
     bodyEl.innerHTML = window.marked.parse(bodyLines);
 
     card.appendChild(titleEl);
@@ -615,56 +493,7 @@ function parseBirthdate(yymmdd) {
   return { year: yyyy, month: mm, day: dd };
 }
 
-// API Key 모달 관리
-function initApiKeyModal() {
-  const modal = document.getElementById('apiKeyModal');
-  const apiKeyInput = document.getElementById('apiKeyInput');
-  const saveKeyBtn = document.getElementById('saveKeyBtn');
-
-  // 페이지 로드 시 키 확인
-  const existingKey = getApiKey();
-  if (!existingKey) {
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-  } else {
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-  }
-
-  // 키 저장
-  if (saveKeyBtn) {
-    saveKeyBtn.addEventListener('click', () => {
-      const key = apiKeyInput.value.trim();
-      if (!key) {
-        alert('인증 키를 입력해주세요.');
-        return;
-      }
-      if (!key.startsWith('sk-')) {
-        alert('올바른 키 형식이 아닙니다. (sk-로 시작해야 합니다)');
-        return;
-      }
-      setApiKey(key);
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      apiKeyInput.value = '';
-      location.reload(); // 페이지 새로고침
-    });
-  }
-
-  // Enter 키로도 저장 가능
-  if (apiKeyInput) {
-    apiKeyInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        saveKeyBtn.click();
-      }
-    });
-  }
-}
-
 if (form) {
-  // API Key 모달 초기화
-  initApiKeyModal();
-
   // 탭 전환 로직
   const tabButtons = document.querySelectorAll('.tab-btn');
   const partnerSection = document.getElementById('partnerSection');
@@ -673,17 +502,13 @@ if (form) {
   
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      // 모든 탭 비활성화 스타일 적용
       tabButtons.forEach(b => {
-        // Inactive 스타일
-        b.classList.remove('border-2', 'border-saju-accent', 'bg-orange-50', 'text-saju-accent', 'font-bold', 'shadow-sm');
-        b.classList.add('border', 'border-gray-200', 'bg-white', 'text-gray-500', 'font-semibold');
+        b.classList.remove('bg-saju-accent', 'text-white', 'shadow-[0_0_15px_rgba(255,59,48,0.3)]', 'font-bold');
+        b.classList.add('text-gray-500', 'font-medium');
         b.setAttribute('aria-selected', 'false');
       });
-      
-      // 선택된 탭 활성화 스타일 적용
-      btn.classList.remove('border', 'border-gray-200', 'bg-white', 'text-gray-500', 'font-semibold');
-      btn.classList.add('border-2', 'border-saju-accent', 'bg-orange-50', 'text-saju-accent', 'font-bold', 'shadow-sm');
+      btn.classList.remove('text-gray-500', 'font-medium');
+      btn.classList.add('bg-saju-accent', 'text-white', 'shadow-[0_0_15px_rgba(255,59,48,0.3)]', 'font-bold');
       btn.setAttribute('aria-selected', 'true');
       
       // 현재 모드 업데이트
@@ -798,13 +623,13 @@ if (form) {
       }, 600);
     } catch (err) {
       // 에러 시 로딩 즉시 종료
-      if (progressInterval) {
-        clearInterval(progressInterval);
-        progressInterval = null;
+      if (loadingInterval) {
+        clearInterval(loadingInterval);
+        loadingInterval = null;
       }
       if (loadingOverlay) {
-        loadingOverlay.classList.remove('flex');
-        loadingOverlay.classList.add('hidden');
+        loadingOverlay.classList.remove("flex");
+        loadingOverlay.classList.add("hidden");
       }
       
       setStatus(err?.message || "오류가 발생했습니다.", "error");

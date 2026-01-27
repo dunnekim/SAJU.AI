@@ -1,388 +1,118 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" class="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SAJU.AI</title>
-    
-    <!-- Favicon (Emoji SVG) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>" />
-    
-    <!-- Open Graph Meta Tags (for Kakao, Facebook, etc.) -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://dunnekim.github.io/SAJU.AI/" />
-    <meta property="og:title" content="🔮 SAJU.AI | AI가 읽어주는 당신의 운명" />
-    <meta property="og:description" content="🔮 이직운·궁합·심리 분석까지. (복채 무료)" />
-    <meta property="og:image" content="https://dunnekim.github.io/SAJU.AI/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content="SAJU.AI" />
-    <meta property="og:locale" content="ko_KR" />
-    
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="🔮 SAJU.AI | AI가 읽어주는 당신의 운명" />
-    <meta name="twitter:description" content="🔮 이직운·궁합·심리 분석까지. (복채 무료)" />
-    <meta name="twitter:image" content="https://dunnekim.github.io/SAJU.AI/og-image.png" />
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="AI 기반 사주 분석 서비스. 운명, 궁합, 커리어 고민을 결정론적 만세력과 심리 분석으로 풀어드립니다." />
-    <meta name="keywords" content="사주, 사주팔자, 궁합, 이직, 커리어, AI, 운세, 만세력, 심리분석" />
-    <meta name="author" content="SAJU.AI" />
-    
-    <!-- Pretendard 폰트 -->
+    <title>SHADOW REPORT - 👁️</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👁️</text></svg>" />
+    <meta property="og:title" content="👁️ SHADOW REPORT | 당신의 어둠을 읽다" />
+    <meta property="og:description" content="가스라이팅, 내면의 그림자, 파괴적 본능. AI가 당신의 무의식을 해부합니다." />
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
             colors: {
-              'saju-cream': '#F9F8F4',
-              'saju-accent': '#FF6B50',
-              'saju-text': '#2D2D2D'
+              'saju-bg': '#0a0a0a',
+              'saju-card': '#141414',
+              'saju-input': '#1e1e1e',
+              'saju-border': '#333333',
+              'saju-accent': '#FF3B30',
+              'saju-text': '#E0E0E0',
+              'saju-muted': '#888888'
             },
             fontFamily: {
-              sans: ['Pretendard Variable', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', '"Helvetica Neue"', '"Segoe UI"', '"Apple SD Gothic Neo"', '"Noto Sans KR"', '"Malgun Gothic"', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', 'sans-serif']
-            }
+              sans: ['Pretendard Variable', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'sans-serif']
+            },
+            animation: { 'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
           }
         }
       }
     </script>
-
-    <!-- marked.js (Markdown renderer) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- html2canvas (인스타 스토리 공유 이미지 생성) -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
-    <!-- Import maps: lunar-javascript (CDN only) -->
     <script type="importmap">
-      {
-        "imports": {
-          "lunar-javascript": "https://esm.run/lunar-javascript"
-        }
-      }
+      { "imports": { "lunar-javascript": "https://esm.run/lunar-javascript" } }
     </script>
-
     <style>
-      /* 커스텀 애니메이션 */
-      @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-8px) rotate(3deg); }
+      /* 전역 폰트 강제 적용 (굴림체 박멸) */
+      body, input, select, button, textarea {
+        font-family: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif !important;
       }
-      .float-animation {
-        animation: float 3s ease-in-out infinite;
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #0a0a0a; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #555; }
+      .prose-invert { color: #E0E0E0; }
+      .prose-invert h2 { color: #FF3B30; font-weight: 800; letter-spacing: -0.02em; }
+      .prose-invert p { line-height: 1.8; margin-bottom: 1.5em; font-size: 1.05rem; }
+      .prose-invert strong { color: #FFFFFF; font-weight: 700; }
+      select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23A3A3A3' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
       }
-      @keyframes fade-in {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
-      }
-      .animate-fade-in {
-        animation: fade-in 0.3s ease-out;
-      }
-      @keyframes fade-out {
-        from { opacity: 1; }
-        to { opacity: 0; }
-      }
-      .animate-fade-out {
-        animation: fade-out 0.5s ease-out forwards;
-      }
-      @keyframes progress-fill {
-        from { width: 0%; }
-        to { width: 100%; }
-      }
+      .section-card { box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+      @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+      .animate-fade-out { animation: fade-out 0.5s ease-out forwards; }
     </style>
   </head>
-  <body class="font-sans bg-saju-cream text-saju-text min-h-screen antialiased">
-    <!-- 로딩 프로그레스 오버레이 -->
-    <div id="loadingOverlay" class="hidden fixed inset-0 bg-white/95 backdrop-blur-sm z-50 items-center justify-center">
-      <div class="text-center px-6">
-        <div class="mb-6">
-          <span class="text-6xl animate-pulse">🔮</span>
+  <body class="font-sans bg-saju-bg text-saju-text min-h-screen antialiased selection:bg-red-900 selection:text-white">
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-[#000000]/95 backdrop-blur-md z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-500">
+      <div class="text-center mb-12 relative w-full max-w-md">
+        <div class="mb-10 relative inline-block">
+          <span class="text-7xl animate-pulse-slow grayscale opacity-80">👁️</span>
+          <div class="absolute inset-0 bg-red-500 blur-3xl opacity-20 animate-pulse"></div>
         </div>
-        <h3 class="text-2xl font-bold text-saju-text mb-2">운명을 읽어내는 중입니다...</h3>
-        <p class="text-sm text-gray-600 mb-8">잠시만 기다려주세요</p>
-        
-        <!-- Progress Bar -->
-        <div class="max-w-md mx-auto mb-4">
-          <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-            <div id="progressBar" class="h-full bg-gradient-to-r from-saju-accent to-orange-400 rounded-full transition-all duration-300" style="width: 0%"></div>
-          </div>
-        </div>
-        
-        <!-- Percentage -->
-        <p id="progressText" class="text-lg font-bold text-saju-accent">0%</p>
-      </div>
-    </div>
-
-    <!-- 인증 키 입력 모달 -->
-    <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center p-4">
-      <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-fade-in">
-        <div class="text-center mb-6">
-          <div class="inline-block mb-4">
-            <span class="text-5xl">🔑</span>
-          </div>
-          <h2 class="text-2xl font-bold text-saju-text mb-2">인증 키 설정</h2>
-          <p class="text-sm text-gray-600">
-            분석을 위한 인증 키를 입력하세요
+        <h3 class="text-3xl font-black text-white mb-8 tracking-widest drop-shadow-[0_0_15px_rgba(255,59,48,0.5)]">DECODING SHADOW...</h3>
+        <div class="h-16 flex items-center justify-center">
+          <p id="loadingText" class="text-sm font-bold text-red-500 tracking-[0.15em] uppercase opacity-90 transition-opacity duration-200 leading-relaxed text-center px-4">
+            데이터 업로딩...
           </p>
         </div>
-
-        <div class="mb-6">
-          <label for="apiKeyInput" class="block text-sm font-semibold text-gray-700 mb-2">
-            인증 키
-          </label>
-          <input 
-            id="apiKeyInput" 
-            type="password" 
-            placeholder="sk-proj-..." 
-            class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-saju-accent focus:ring-2 focus:ring-saju-accent/20 transition-all font-mono text-sm"
-          />
-        </div>
-
-        <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div class="flex items-start gap-3">
-            <span class="text-blue-600 text-xl flex-shrink-0">ℹ️</span>
-            <div class="text-sm text-blue-800">
-              <p class="font-semibold mb-1">안전하게 저장됩니다</p>
-              <p class="text-blue-700">• 브라우저에만 저장 (서버 전송 없음)</p>
-              <p class="text-blue-700">• 외부로 유출되지 않습니다</p>
-              <p class="text-blue-700 mt-2 text-xs">
-                키가 없으신가요? 관리자에게 문의하세요
-              </p>
-            </div>
+        <div class="max-w-xs mx-auto mt-6">
+          <div class="w-full h-1 bg-gray-900 rounded-full overflow-hidden border border-gray-800">
+            <div id="progressBar" class="h-full bg-red-600 rounded-full transition-all duration-700 ease-out shadow-[0_0_15px_#FF3B30]" style="width: 0%"></div>
           </div>
         </div>
-
-        <button 
-          id="saveKeyBtn"
-          class="w-full bg-saju-accent text-white font-bold py-3 px-6 rounded-full hover:bg-[#FF5540] active:scale-[0.98] transition-all shadow-sm hover:shadow-md"
-        >
-          ✨ 저장하고 시작하기
-        </button>
+      </div>
+      <div id="ad-slot-loading" class="w-full max-w-[320px] h-[100px] bg-[#0f0f0f] border border-gray-800 rounded flex items-center justify-center relative overflow-hidden shadow-2xl mt-4">
+        <span class="text-[10px] text-gray-700 absolute top-1 right-2 tracking-widest font-bold uppercase">SPONSORED</span>
+        <p class="text-xs text-gray-600 font-bold tracking-[0.15em] uppercase">잠시 후 분석 결과가 공개됩니다</p>
       </div>
     </div>
 
-    <main class="max-w-2xl mx-auto px-4 py-8 md:py-12">
-      <!-- 헤더 섹션 -->
+    <main class="max-w-xl mx-auto px-5 py-12 md:py-20">
       <header class="text-center mb-12">
-        <div class="inline-block float-animation mb-4">
-          <span class="text-6xl">🔮</span>
-        </div>
-        <h1 class="text-4xl md:text-5xl font-bold text-saju-text mb-3 tracking-tight">
-          SAJU.AI
+        <h1 class="text-4xl md:text-5xl font-black text-white mb-3 tracking-widest uppercase leading-tight drop-shadow-2xl">
+          Shadow<span class="text-saju-accent">.Report</span>
         </h1>
-        <p class="text-sm font-semibold tracking-[0.18em] text-saju-accent/90 mb-2">
-          사주 봐드립니다 🌿
-        </p>
-        <p class="text-lg md:text-xl text-gray-600 font-medium">
-          복채 없습니다 ✨
-        </p>
+        <p class="text-xs md:text-sm text-saju-muted font-bold tracking-[0.1em] uppercase opacity-90">Dark Psychology Profiler</p>
       </header>
 
-      <!-- 입력 폼 카드 -->
-      <section class="bg-white rounded-2xl shadow-sm mb-8 p-6 md:p-8">
-        <!-- 탭 메뉴 -->
-        <div class="flex gap-3 mb-6" role="tablist">
-          <button 
-            type="button"
-            id="tabGeneral"
-            data-mode="general"
-            class="tab-btn flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all border-2 border-saju-accent bg-orange-50 text-saju-accent shadow-sm"
-            role="tab"
-            aria-selected="true"
-          >
-            🔮 운명
-          </button>
-          <button 
-            type="button"
-            id="tabCompatibility"
-            data-mode="compatibility"
-            class="tab-btn flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all border border-gray-200 bg-white text-gray-500"
-            role="tab"
-            aria-selected="false"
-          >
-            💖 궁합
-          </button>
-          <button 
-            type="button"
-            id="tabCareer"
-            data-mode="career"
-            class="tab-btn flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all border border-gray-200 bg-white text-gray-500"
-            role="tab"
-            aria-selected="false"
-          >
-            💼 커리어
-          </button>
+      <section class="bg-saju-card border border-gray-800 rounded-2xl shadow-2xl mb-12 p-6 md:p-8 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-saju-accent to-transparent opacity-40"></div>
+        <div class="flex p-1 bg-black/40 rounded-xl mb-8 border border-gray-800/50" role="tablist">
+          <button type="button" id="tabGeneral" data-mode="general" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all bg-saju-accent text-white shadow-[0_0_15px_rgba(255,59,48,0.3)] tracking-[0.15em]" role="tab" aria-selected="true">◼ 심연</button>
+          <button type="button" id="tabCompatibility" data-mode="compatibility" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all text-gray-400 hover:text-white tracking-[0.15em]" role="tab" aria-selected="false">💔 파멸</button>
+          <button type="button" id="tabCareer" data-mode="career" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all text-gray-400 hover:text-white tracking-[0.15em]" role="tab" aria-selected="false">💼 생존</button>
         </div>
 
-        <div class="mb-6">
-          <h2 class="text-xl font-bold text-saju-text mb-2">생년월일 입력</h2>
-          <p class="text-sm text-gray-500">정확한 분석을 위해 출생 정보를 입력해주세요</p>
-        </div>
         <form id="sajuForm" autocomplete="off" class="space-y-6">
-          <!-- 생년월일 통합 (YYMMDD) + 시간 -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label for="birthdate" class="block text-sm font-semibold text-gray-700 mb-2">생년월일 (6자리)</label>
-              <input 
-                id="birthdate" 
-                type="text" 
-                inputmode="numeric"
-                pattern="[0-9]{6}"
-                maxlength="6"
-                placeholder="930320 (YYMMDD)" 
-                required 
-                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-saju-accent focus:ring-2 focus:ring-saju-accent/20 transition-all"
-              />
-            </div>
-            <div>
-              <label for="birthHour" class="block text-sm font-semibold text-gray-700 mb-2">태어난 시간대</label>
-              <select 
-                id="birthHour"
-                required 
-                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-saju-accent focus:ring-2 focus:ring-saju-accent/20 transition-all bg-white"
-              >
-                <option value="">선택하세요</option>
-                <option value="23-01">자시 (23:00~01:00)</option>
-                <option value="01-03">축시 (01:00~03:00)</option>
-                <option value="03-05">인시 (03:00~05:00)</option>
-                <option value="05-07">묘시 (05:00~07:00)</option>
-                <option value="07-09">진시 (07:00~09:00)</option>
-                <option value="09-11">사시 (09:00~11:00)</option>
-                <option value="11-13">오시 (11:00~13:00)</option>
-                <option value="13-15">미시 (13:00~15:00)</option>
-                <option value="15-17">신시 (15:00~17:00)</option>
-                <option value="17-19">유시 (17:00~19:00)</option>
-                <option value="19-21">술시 (19:00~21:00)</option>
-                <option value="21-23">해시 (21:00~23:00)</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- 성별 -->
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-3">성별</label>
-            <div class="flex gap-3" role="radiogroup" aria-label="gender">
-              <label class="flex-1 cursor-pointer">
-                <input type="radio" name="gender" value="male" checked class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  남
-                </div>
-              </label>
-              <label class="flex-1 cursor-pointer">
-                <input type="radio" name="gender" value="female" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  여
-                </div>
-              </label>
-              <label class="flex-1 cursor-pointer">
-                <input type="radio" name="gender" value="other" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  기타
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <!-- 연애 상태 (궁합 분석 모드에서만 표시) -->
-          <div id="relationshipSection" class="hidden">
-            <label class="block text-sm font-semibold text-gray-700 mb-3">현재 연애 상태</label>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3" role="radiogroup" aria-label="relationship">
-              <label class="cursor-pointer">
-                <input type="radio" name="relationship" value="single" checked class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  솔로
-                </div>
-              </label>
-              <label class="cursor-pointer">
-                <input type="radio" name="relationship" value="dating" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  연애 중
-                </div>
-              </label>
-              <label class="cursor-pointer">
-                <input type="radio" name="relationship" value="plateau" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  권태기
-                </div>
-              </label>
-              <label class="cursor-pointer">
-                <input type="radio" name="relationship" value="married" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  결혼
-                </div>
-              </label>
-              <label class="cursor-pointer">
-                <input type="radio" name="relationship" value="divorced" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  이혼
-                </div>
-              </label>
-              <label class="cursor-pointer">
-                <input type="radio" name="relationship" value="widowed" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  사별
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <!-- 직업 상태 (커리어 모드에서만 표시) -->
-          <div id="careerStatusSection" class="hidden">
-            <label class="block text-sm font-semibold text-gray-700 mb-3">현재 직업 상태</label>
-            <div class="grid grid-cols-3 gap-3" role="radiogroup" aria-label="career-status">
-              <label class="cursor-pointer">
-                <input type="radio" name="careerStatus" value="seeking" checked class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  👶 취준생
-                </div>
-              </label>
-              <label class="cursor-pointer">
-                <input type="radio" name="careerStatus" value="burnout" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  🔥 현타 왔어
-                </div>
-              </label>
-              <label class="cursor-pointer">
-                <input type="radio" name="careerStatus" value="moving" class="peer sr-only" />
-                <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                  🏃 탈주 각
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <!-- 상대방 정보 입력 (궁합 분석 모드에서만 표시) -->
-          <div id="partnerSection" class="hidden space-y-6 pt-6 border-t-2 border-gray-100">
-            <div class="mb-4">
-              <h3 class="text-lg font-bold text-saju-accent mb-1">💖 상대방 정보</h3>
-              <p class="text-sm text-gray-500">상대방의 출생 정보를 입력해주세요</p>
-            </div>
-
-            <!-- 상대방 생년월일 + 시간 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label for="partnerBirthdate" class="block text-sm font-semibold text-gray-700 mb-2">생년월일 (6자리)</label>
-                <input 
-                  id="partnerBirthdate" 
-                  type="text" 
-                  inputmode="numeric"
-                  pattern="[0-9]{6}"
-                  maxlength="6"
-                  placeholder="930614 (YYMMDD)" 
-                  class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-saju-accent focus:ring-2 focus:ring-saju-accent/20 transition-all"
-                />
+          <div class="space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label for="birthdate" class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Birth Date</label>
+                <input id="birthdate" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="YYMMDD" required
+                  class="w-full px-4 py-3.5 bg-saju-input border border-saju-border rounded-xl text-saju-text placeholder-gray-700 focus:outline-none focus:border-saju-accent focus:ring-1 focus:ring-saju-accent transition-all font-bold text-center text-lg tracking-widest shadow-inner" />
               </div>
-              <div>
-                <label for="partnerBirthHour" class="block text-sm font-semibold text-gray-700 mb-2">태어난 시간대</label>
-                <select 
-                  id="partnerBirthHour"
-                  class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-saju-accent focus:ring-2 focus:ring-saju-accent/20 transition-all bg-white"
-                >
-                  <option value="">선택하세요</option>
+              <div class="space-y-2">
+                <label for="birthHour" class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Birth Time</label>
+                <select id="birthHour" required class="w-full px-4 py-3.5 bg-saju-input border border-saju-border rounded-xl text-saju-text focus:outline-none focus:border-saju-accent focus:ring-1 focus:ring-saju-accent transition-all appearance-none text-sm font-bold tracking-widest shadow-inner pr-10 text-center">
+                  <option value="">시간 선택</option>
                   <option value="23-01">자시 (23:00~01:00)</option>
                   <option value="01-03">축시 (01:00~03:00)</option>
                   <option value="03-05">인시 (03:00~05:00)</option>
@@ -399,95 +129,106 @@
               </div>
             </div>
 
-            <!-- 상대방 성별 -->
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-3">성별</label>
-              <div class="flex gap-3" role="radiogroup" aria-label="partner gender">
+            <div class="space-y-2">
+              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Gender</label>
+              <div class="flex gap-3" role="radiogroup" aria-label="gender">
                 <label class="flex-1 cursor-pointer">
-                  <input type="radio" name="partnerGender" value="male" checked class="peer sr-only" />
-                  <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                    남
-                  </div>
+                  <input type="radio" name="gender" value="male" checked class="peer sr-only" />
+                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-widest transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner">Male</div>
                 </label>
                 <label class="flex-1 cursor-pointer">
-                  <input type="radio" name="partnerGender" value="female" class="peer sr-only" />
-                  <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                    여
-                  </div>
+                  <input type="radio" name="gender" value="female" class="peer sr-only" />
+                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-widest transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner">Female</div>
                 </label>
                 <label class="flex-1 cursor-pointer">
-                  <input type="radio" name="partnerGender" value="other" class="peer sr-only" />
-                  <div class="px-4 py-3 border-2 border-gray-200 rounded-lg text-center font-medium transition-all peer-checked:border-saju-accent peer-checked:bg-saju-accent/5 peer-checked:text-saju-accent hover:border-gray-300">
-                    기타
-                  </div>
+                  <input type="radio" name="gender" value="other" class="peer sr-only" />
+                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-[0.15em] transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner">기타</div>
                 </label>
+              </div>
+            </div>
+
+            <div id="relationshipSection" class="hidden space-y-2">
+              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Relationship Status</label>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-2" role="radiogroup" aria-label="relationship">
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="single" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">솔로</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="dating" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">연애 중</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="plateau" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">위기</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="married" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">결혼</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="divorced" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">이혼</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="widowed" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">사별</div></label>
+              </div>
+            </div>
+
+            <div id="careerStatusSection" class="hidden space-y-2">
+              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Current Status</label>
+              <div class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="career-status">
+                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="seeking" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">취준</div></label>
+                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="burnout" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">현타</div></label>
+                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="moving" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">이직</div></label>
+              </div>
+            </div>
+
+            <div id="partnerSection" class="hidden space-y-4 pt-6 border-t border-gray-800">
+              <p class="text-xs text-saju-accent font-black uppercase tracking-widest text-center">--- Target Subject ---</p>
+              <div class="grid grid-cols-2 gap-4">
+                <input id="partnerBirthdate" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="YYMMDD" class="w-full px-4 py-3 bg-saju-input border border-saju-border rounded-xl text-saju-text text-center font-bold tracking-widest shadow-inner focus:outline-none focus:border-saju-accent focus:ring-1 focus:ring-saju-accent transition-all" />
+                <select id="partnerBirthHour" class="w-full px-4 py-3 bg-saju-input border border-saju-border rounded-xl text-saju-text text-sm font-bold tracking-widest shadow-inner pr-10 focus:outline-none focus:border-saju-accent focus:ring-1 focus:ring-saju-accent transition-all text-center">
+                  <option value="">시간 선택</option>
+                  <option value="23-01">자시 (23:00~01:00)</option>
+                  <option value="01-03">축시 (01:00~03:00)</option>
+                  <option value="03-05">인시 (03:00~05:00)</option>
+                  <option value="05-07">묘시 (05:00~07:00)</option>
+                  <option value="07-09">진시 (07:00~09:00)</option>
+                  <option value="09-11">사시 (09:00~11:00)</option>
+                  <option value="11-13">오시 (11:00~13:00)</option>
+                  <option value="13-15">미시 (13:00~15:00)</option>
+                  <option value="15-17">신시 (15:00~17:00)</option>
+                  <option value="17-19">유시 (17:00~19:00)</option>
+                  <option value="19-21">술시 (19:00~21:00)</option>
+                  <option value="21-23">해시 (21:00~23:00)</option>
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Partner Gender</label>
+                <div class="flex gap-3" role="radiogroup" aria-label="partner gender">
+                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="male" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">남</div></label>
+                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="female" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">여</div></label>
+                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="other" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">기타</div></label>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- (no API key UI) -->
-
-          <!-- 제출 버튼 -->
-          <button 
-            type="submit" 
-            id="analyzeBtn"
-            class="w-full bg-saju-accent text-white font-bold py-4 px-6 rounded-full hover:bg-[#FF5540] active:scale-[0.98] transition-all shadow-sm hover:shadow-md"
-          >
-            ✨ 탐구하기
+          <button type="submit" id="analyzeBtn" class="w-full bg-saju-accent hover:bg-red-600 text-white font-black py-5 rounded-xl shadow-[0_0_25px_rgba(255,59,48,0.2)] hover:shadow-[0_0_40px_rgba(255,59,48,0.4)] transition-all uppercase tracking-widest text-sm border border-red-500/20 active:scale-[0.98]">
+            DECODE DESTINY
           </button>
-
         </form>
       </section>
 
-      <!-- 상태 메시지 -->
-      <div 
-        id="status" 
-        class="hidden mb-6 px-6 py-4 rounded-xl border-2 transition-all"
-        aria-live="polite"
-      ></div>
+      <div id="status" class="hidden mb-6 px-6 py-4 rounded-lg border border-gray-800 text-center text-sm font-bold tracking-[0.15em]" aria-live="polite"></div>
 
-      <!-- 결과 카드 -->
-      <section class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
-        <div class="mb-6">
-          <h2 class="text-xl font-bold text-saju-text flex items-center gap-2">
-            <span>📝</span>
-            <span>결과</span>
-          </h2>
-        </div>
-        
-        <article 
-          id="result" 
-          class="prose prose-stone max-w-none min-h-[200px]"
-        >
-          <div class="text-center py-12 text-gray-400">
-            <p class="text-lg mb-2">🎯</p>
-            <p>생년월일을 입력하고 탐구하기 버튼을 눌러보세요</p>
+      <section class="bg-saju-card border border-gray-800 rounded-2xl shadow-2xl p-6 md:p-8">
+        <h2 class="text-xl font-black text-white mb-6 tracking-[0.15em]">결과</h2>
+        <article id="result" class="prose prose-invert prose-p:text-[#E0E0E0] prose-p:leading-relaxed max-w-none min-h-[200px] space-y-8">
+          <div class="text-center py-12 text-saju-muted">
+            <p class="text-lg mb-2">👁️</p>
+            <p class="font-bold tracking-[0.15em]">생년월일을 입력하고 DECODE DESTINY를 실행하세요</p>
           </div>
         </article>
-
-        <div class="mt-8 space-y-4">
-          <button 
-            type="button"
-            onclick="window.downloadInstaCard&&window.downloadInstaCard()" 
-            class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform transition hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2"
-          >
-            <span>📸</span>
-            <span>인스타 스토리에 팩폭 공유하기</span>
+        <div class="mt-8">
+          <button type="button" onclick="window.downloadInstaCard&&window.downloadInstaCard()" class="w-full bg-saju-input border border-saju-border text-saju-text px-8 py-4 rounded-full font-black hover:border-saju-accent hover:text-saju-accent transition-all flex items-center justify-center gap-2 text-sm tracking-widest uppercase shadow-inner">
+            <span>📸</span> <span>Save Report</span>
           </button>
-          <div id="adContainer" class="w-full h-32 bg-gray-100 rounded-xl flex items-center justify-center border border-gray-200">
-            <p class="text-xs text-gray-400">광고 영역 (Google AdSense)</p>
+          <div id="adContainer" class="w-full h-32 mt-4 bg-saju-input border border-gray-800 rounded-xl flex items-center justify-center">
+            <p class="text-xs text-saju-muted font-bold tracking-[0.15em] uppercase">광고 영역</p>
           </div>
         </div>
       </section>
 
-      <!-- 푸터 노트 -->
-      <footer class="mt-8 px-4 py-6 bg-white/50 rounded-xl border border-gray-100 text-center">
-        <p class="text-sm text-gray-600">
-          ❤️ <span class="font-semibold text-saju-accent">행복하세요</span>
-        </p>
+      <footer class="mt-8 px-4 py-6 border border-gray-800 rounded-xl text-center">
+        <p class="text-sm text-saju-muted font-bold tracking-[0.15em]">당신의 어둠을 읽다 · <span class="text-saju-accent font-black">SHADOW REPORT</span></p>
       </footer>
     </main>
-
     <script type="module" src="./script.js"></script>
   </body>
 </html>
