@@ -3,6 +3,162 @@ import { Solar } from "lunar-javascript";
 // 현재 선택된 모드 (global state)
 let currentMode = "general";
 
+// ---------- i18n: 브라우저 언어 감지 및 UI 번역 ----------
+/** @returns {'ko'|'en'|'ja'} ko/ja 외에는 en 기본 */
+function detectLanguage() {
+  const nav = (typeof navigator !== "undefined" && (navigator.language || navigator.userLanguage || "")) || "";
+  if (nav.startsWith("ko")) return "ko";
+  if (nav.startsWith("ja")) return "ja";
+  return "en";
+}
+let currentLang = detectLanguage();
+
+const translations = {
+  ko: {
+    titleMain: "Shadow",
+    titleAccent: ".Report",
+    subtitle: "Dark Psychology Profiler",
+    tabGeneral: "◼ 심연",
+    tabCompatibility: "💔 파멸",
+    tabCareer: "💼 생존",
+    labelBirthDate: "Birth Date",
+    labelBirthTime: "Birth Time",
+    labelGender: "Gender",
+    genderMale: "Male",
+    genderFemale: "Female",
+    genderOther: "기타",
+    labelRelationship: "Relationship Status",
+    relSingle: "솔로",
+    relDating: "연애 중",
+    relPlateau: "위기",
+    relMarried: "결혼",
+    relDivorced: "이혼",
+    relWidowed: "사별",
+    labelCareer: "Current Status",
+    careerSeeking: "취준",
+    careerBurnout: "현타",
+    careerMoving: "이직",
+    targetSubject: "--- Target Subject ---",
+    labelPartnerGender: "Partner Gender",
+    partnerMale: "남",
+    partnerFemale: "여",
+    partnerOther: "기타",
+    btnDecode: "DECODE DESTINY",
+    resultTitle: "결과",
+    resultPlaceholder: "생년월일을 입력하고 DECODE DESTINY를 실행하세요",
+    saveReport: "Save Report",
+    footerBefore: "당신의 어둠을 읽다 · ",
+    footerBrand: "FATE.AI · SHADOW REPORT",
+    loadingInitial: "데이터 업로딩..."
+  },
+  en: {
+    titleMain: "SHADOW",
+    titleAccent: " DESTINY",
+    subtitle: "Narcissism & Dark Psychology Decoder",
+    tabGeneral: "◼ ABYSS",
+    tabCompatibility: "💔 RUIN",
+    tabCareer: "💼 SURVIVAL",
+    labelBirthDate: "Birth Date",
+    labelBirthTime: "Birth Time",
+    labelGender: "Gender",
+    genderMale: "Male",
+    genderFemale: "Female",
+    genderOther: "Other",
+    labelRelationship: "Relationship Status",
+    relSingle: "Single",
+    relDating: "Dating",
+    relPlateau: "Plateau",
+    relMarried: "Married",
+    relDivorced: "Divorced",
+    relWidowed: "Widowed",
+    labelCareer: "Current Status",
+    careerSeeking: "Seeking",
+    careerBurnout: "Burnout",
+    careerMoving: "Moving",
+    targetSubject: "--- Target Subject ---",
+    labelPartnerGender: "Partner Gender",
+    partnerMale: "M",
+    partnerFemale: "F",
+    partnerOther: "Other",
+    btnDecode: "DECODE MY FATE",
+    resultTitle: "Result",
+    resultPlaceholder: "Enter birth date and tap DECODE MY FATE",
+    saveReport: "Save Report",
+    footerBefore: "Decode your shadow · ",
+    footerBrand: "FATE.AI · SHADOW REPORT",
+    loadingInitial: "Loading data..."
+  },
+  ja: {
+    titleMain: "深淵の",
+    titleAccent: "運命",
+    subtitle: "四柱推命・心理分析",
+    tabGeneral: "◼ 深淵",
+    tabCompatibility: "💔 破滅",
+    tabCareer: "💼 生存",
+    labelBirthDate: "生年月日",
+    labelBirthTime: "出生時刻",
+    labelGender: "性別",
+    genderMale: "男性",
+    genderFemale: "女性",
+    genderOther: "その他",
+    labelRelationship: "恋愛状況",
+    relSingle: "独身",
+    relDating: "交際中",
+    relPlateau: "倦怠期",
+    relMarried: "既婚",
+    relDivorced: "離婚",
+    relWidowed: "死別",
+    labelCareer: "現在の状況",
+    careerSeeking: "就活中",
+    careerBurnout: "燃え尽き",
+    careerMoving: "転職",
+    targetSubject: "--- 対象者 ---",
+    labelPartnerGender: "相手の性別",
+    partnerMale: "男",
+    partnerFemale: "女",
+    partnerOther: "その他",
+    btnDecode: "運命を解読する",
+    resultTitle: "結果",
+    resultPlaceholder: "生年月日を入力して「運命を解読する」を実行してください",
+    saveReport: "レポート保存",
+    footerBefore: "あなたの闇を読む · ",
+    footerBrand: "FATE.AI · SHADOW REPORT",
+    loadingInitial: "データ読込中..."
+  }
+};
+
+function updateLanguage() {
+  if (typeof document === "undefined" || !document.querySelectorAll) return;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    if (key && translations[currentLang] && translations[currentLang][key] !== undefined) {
+      el.textContent = translations[currentLang][key];
+    }
+  });
+  updateLangButtons();
+}
+
+/** 언어 전환 버튼 활성 스타일 갱신 */
+function updateLangButtons() {
+  document.querySelectorAll(".lang-btn").forEach((btn) => {
+    const lang = btn.getAttribute("data-lang");
+    if (lang === currentLang) {
+      btn.classList.add("border-saju-accent", "text-white", "bg-saju-accent", "shadow-[0_0_10px_rgba(255,59,48,0.3)]");
+      btn.classList.remove("text-saju-muted");
+    } else {
+      btn.classList.remove("border-saju-accent", "text-white", "bg-saju-accent", "shadow-[0_0_10px_rgba(255,59,48,0.3)]");
+      btn.classList.add("text-saju-muted");
+    }
+  });
+}
+
+/** 언어 수동 전환 (KO/EN/JA 버튼용) */
+function setLanguage(lang) {
+  if (lang !== "ko" && lang !== "en" && lang !== "ja") return;
+  currentLang = lang;
+  updateLanguage();
+}
+
 function summarizeCounts(counts) {
   const entries = Object.entries(counts || {}).filter(([, v]) => Number.isFinite(v));
   if (!entries.length) return { strongest: null, weakest: null, text: "" };
@@ -169,6 +325,55 @@ function countFiveElementsFromPillars(fourPillars) {
   return counts;
 }
 
+// 십신(十神): 일간 기준 타 천간과의 관계 (비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인·일주)
+const GAN_ORDER = "甲乙丙丁戊己庚辛壬癸";
+function getGanIndex(gan) {
+  const i = GAN_ORDER.indexOf(gan);
+  return i >= 0 ? i : -1;
+}
+function getTenGod(dayMaster, gan) {
+  if (!dayMaster || !gan) return "";
+  if (gan === dayMaster) return "일주";
+  const iDay = getGanIndex(dayMaster);
+  const iOther = getGanIndex(gan);
+  if (iDay < 0 || iOther < 0) return "";
+  const elemDay = Math.floor(iDay / 2);   // 0 wood, 1 fire, 2 earth, 3 metal, 4 water
+  const elemOther = Math.floor(iOther / 2);
+  const yangDay = iDay % 2 === 0;
+  const yangOther = iOther % 2 === 0;
+  const sameYinYang = yangDay === yangOther;
+
+  if (elemDay === elemOther) return sameYinYang ? "비견" : "겁재";
+  const produces = (d, o) => (d + 1) % 5 === o;  // wood->fire, fire->earth, ...
+  const controls = (d, o) => (d + 2) % 5 === o; // wood->earth, fire->metal, ...
+  if (produces(elemDay, elemOther)) return sameYinYang ? "식신" : "상관";
+  if (produces(elemOther, elemDay)) return sameYinYang ? "편인" : "정인";
+  if (controls(elemDay, elemOther)) return sameYinYang ? "편재" : "정재";
+  if (controls(elemOther, elemDay)) return sameYinYang ? "편관" : "정관";
+  return "";
+}
+
+/** RALPH: GPT 해석용 확정 데이터만 추출 (사주 계산 결과 중) */
+function buildRalphData(saju) {
+  if (!saju || !saju.four_pillars) return null;
+  const fp = saju.four_pillars;
+  const dayMaster = saju.day_master || fp.day?.gan || "";
+  const pillars = {
+    year: fp.year ? `${fp.year.gan}${fp.year.ji}` : "",
+    month: fp.month ? `${fp.month.gan}${fp.month.ji}` : "",
+    day: fp.day ? `${fp.day.gan}${fp.day.ji}` : "",
+    hour: fp.hour ? `${fp.hour.gan}${fp.hour.ji}` : "",
+  };
+  const elements = { ...(saju.five_elements_count || initElementsCount()) };
+  const tenGods = {
+    year: fp.year?.gan ? getTenGod(dayMaster, fp.year.gan) : "",
+    month: fp.month?.gan ? getTenGod(dayMaster, fp.month.gan) : "",
+    day: "일주",
+    hour: fp.hour?.gan ? getTenGod(dayMaster, fp.hour.gan) : "",
+  };
+  return { dayMaster, pillars, elements, tenGods };
+}
+
 // Step 2. RALPH 엔진 (결정론적 계산)
 // 함수명: calculateSaju(year, month, day, hour, minute)
 export function calculateSaju(year, month, day, hour, minute) {
@@ -178,6 +383,7 @@ export function calculateSaju(year, month, day, hour, minute) {
   const hh = normalizeInt(hour, "시(HH)");
   const mm = normalizeInt(minute, "분(mm)");
 
+  if (y < 1950 || y > 2030) throw new Error("연도는 1950~2030 범위여야 합니다.");
   if (m < 1 || m > 12) throw new Error("월(MM)은 1~12 범위여야 합니다.");
   if (d < 1 || d > 31) throw new Error("일(DD)은 1~31 범위여야 합니다.");
   if (hh < 0 || hh > 23) throw new Error("시(HH)은 0~23 범위여야 합니다.");
@@ -210,9 +416,13 @@ export function calculateSaju(year, month, day, hour, minute) {
 }
 
 // ------------------------------------------------------------------
-// [Abyssal Wait-Gate] 12초 강제 심리 압박 (수익화·광고 노출)
+// [Dynamic Wait-Gate] 캐시 히트 5초 / 캐시 미스 시 cynicalIndex에 따라 최대 18초 (수익화 극대화)
 // ------------------------------------------------------------------
-const MIN_WAIT_MS = 12000;
+const WAIT_CACHE_MS = 5000;   // 캐시 히트: UX 보상 → 5초 고정
+const WAIT_MISS_BASE_MS = 12000;  // 캐시 미스 기본
+const WAIT_MISS_EXTRA_MS = 6000;  // cynicalIndex 1.0일 때 +6초 → 최대 18초
+const WAIT_MISS_MAX_MS = 18000;
+const INITIAL_WAIT_MS = 18000;    // 로딩 스크립트 주기 (최대 대기 시간 기준)
 
 const LOADING_SCRIPTS = [
   { progress: 10, text: "사회적 가면(Persona) 데이터 강제 분리 중..." },
@@ -223,25 +433,49 @@ const LOADING_SCRIPTS = [
   { progress: 95, text: "당신의 심연을 텍스트로 변환하는 중..." },
 ];
 
-export async function analyzeSaju({ sajuJson, mode = "general" }) {
-  // [배포용] Render 실제 운영 서버 주소
+// Cynical Index (비판 수위): 모드별 0.0~1.0
+const CYNICAL_INDEX = { general: 0.7, compatibility: 1.0, career: 0.8 };
+
+export async function analyzeSaju({ sajuJson, mode = "general", ralphData: ralphDataIn, cynicalIndex: cynicalIndexIn }) {
+  // GA4: 분석 시작 이벤트
+  if (typeof gtag === "function") {
+    gtag("event", "begin_analysis", {
+      event_category: "Engagement",
+      event_label: mode
+    });
+  }
+
+  const cynicalIndex = cynicalIndexIn ?? CYNICAL_INDEX[mode] ?? 0.7;
+  const ralphData = ralphDataIn ?? (sajuJson.me != null
+    ? { me: buildRalphData(sajuJson.me), partner: buildRalphData(sajuJson.partner) }
+    : buildRalphData(sajuJson));
+
+  const startTime = Date.now();
   const API_URL = "https://fate-ai-rgea.onrender.com/api/analyze";
   console.log(`📡 Sending Request to: ${API_URL}`);
 
-  const apiPromise = fetch(API_URL, {
+  const response = await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ sajuJson, mode }),
-  }).then(async res => {
-    const data = await res.json();
-    if (!res.ok) throw new Error(data?.error?.message || "Server Error");
-    const content = data?.choices?.[0]?.message?.content;
-    if (!content) throw new Error("분석 결과가 비어 있습니다.");
-    return content;
+    body: JSON.stringify({ sajuJson, mode, lang: currentLang, ralphData, cynicalIndex }),
   });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data?.error?.message || "Server Error");
 
-  const waitPromise = new Promise(resolve => setTimeout(resolve, MIN_WAIT_MS));
-  const [content] = await Promise.all([apiPromise, waitPromise]);
+  const content = data?.choices?.[0]?.message?.content;
+  if (!content) throw new Error("분석 결과가 비어 있습니다.");
+
+  // 가변 대기: 캐시 히트 → 5초, 캐시 미스 → cynicalIndex 높을수록 최대 18초
+  const requiredWait = data.isCached === true
+    ? WAIT_CACHE_MS
+    : Math.min(WAIT_MISS_MAX_MS, WAIT_MISS_BASE_MS + (cynicalIndex * WAIT_MISS_EXTRA_MS));
+  const elapsed = Date.now() - startTime;
+  const remainingWait = Math.max(0, requiredWait - elapsed);
+
+  // 프로그레스 바를 남은 시간에 맞춰 100%까지 선형 보간
+  updateLoadingRemaining(remainingWait);
+  await new Promise(resolve => setTimeout(resolve, remainingWait));
+
   return content;
 }
 
@@ -272,7 +506,7 @@ function showLoadingOverlay() {
 
   let currentStep = 0;
   const totalSteps = LOADING_SCRIPTS.length;
-  const stepDuration = MIN_WAIT_MS / totalSteps;
+  const stepDuration = INITIAL_WAIT_MS / totalSteps;
 
   loadingInterval = setInterval(() => {
     if (currentStep < totalSteps) {
@@ -289,6 +523,32 @@ function showLoadingOverlay() {
       currentStep++;
     }
   }, stepDuration);
+}
+
+/**
+ * 서버 응답 수신 후 남은 대기 시간에 맞춰 프로그레스 바를 100%까지 선형 보간
+ * @param {number} remainingWait - 남은 대기 시간(ms)
+ */
+function updateLoadingRemaining(remainingWait) {
+  if (loadingInterval) {
+    clearInterval(loadingInterval);
+    loadingInterval = null;
+  }
+
+  const bar = document.getElementById("progressBar");
+  if (!bar || remainingWait <= 0) return;
+
+  const startWidth = parseFloat(bar.style.width) || 0;
+  const startTime = performance.now();
+
+  function tick(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(1, elapsed / remainingWait);
+    const width = startWidth + (100 - startWidth) * progress;
+    bar.style.width = `${width}%`;
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
 }
 
 function completeLoadingOverlay() {
@@ -614,6 +874,14 @@ if (form) {
       // 결과 렌더링
       setStatus("분석 완료. 아래 결과를 확인하세요.", "ok");
       renderMarkdown(md);
+
+      // GA4: 결과 조회 완료 이벤트 (로딩 바 사라진 시점)
+      if (typeof gtag === "function") {
+        gtag("event", "view_result", {
+          event_category: "Engagement",
+          event_label: currentMode
+        });
+      }
       
       // 결과 영역으로 부드럽게 스크롤 (로딩 오버레이 fade-out 후)
       setTimeout(() => {
@@ -652,5 +920,26 @@ if (form) {
       analyzeBtn.disabled = false;
     }
   });
+}
+
+// 페이지 로드 시 UI 언어 적용 + 언어 전환 버튼 바인딩
+function initI18n() {
+  updateLanguage();
+  updateLangButtons();
+}
+
+// 이벤트 위임: 언어 버튼 클릭이 모듈 로드/타이밍과 무관하게 항상 동작하도록
+if (typeof document !== "undefined") {
+  document.addEventListener("click", (e) => {
+    const btn = e.target && e.target.closest ? e.target.closest(".lang-btn") : null;
+    if (!btn) return;
+    const lang = btn.getAttribute("data-lang");
+    if (lang === "ko" || lang === "en" || lang === "ja") setLanguage(lang);
+  });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initI18n);
+  } else {
+    initI18n();
+  }
 }
 
