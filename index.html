@@ -13,8 +13,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FATE.AI · SHADOW REPORT - 👁️</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👁️</text></svg>" />
-    <meta property="og:title" content="👁️ FATE.AI · SHADOW REPORT | 당신의 어둠을 읽다" />
-    <meta property="og:description" content="가스라이팅, 내면의 그림자, 파괴적 본능. AI가 당신의 무의식을 해부합니다." />
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fate.ai.kr/">
+    <meta property="og:title" content="⚠️ 팩폭 주의: 심연의 사주">
+    <meta property="og:description" content="멘탈 약한 분 클릭 금지. AI가 당신의 본성을 스포일러합니다.">
+    <meta property="og:image" content="https://fate.ai.kr/og-image.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://fate.ai.kr/">
+    <meta property="twitter:title" content="⚠️ 팩폭 주의: 심연의 사주">
+    <meta property="twitter:description" content="멘탈 약한 분 클릭 금지. AI가 당신의 본성을 스포일러합니다.">
+    <meta property="twitter:image" content="https://fate.ai.kr/og-image.jpg">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4209789466667997" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -78,7 +87,7 @@
         </div>
         <h3 class="text-3xl font-black text-white mb-8 tracking-widest drop-shadow-[0_0_15px_rgba(255,59,48,0.5)]">DECODING SHADOW...</h3>
         <div class="h-16 flex items-center justify-center">
-          <p id="loadingText" class="text-sm font-bold text-red-500 tracking-[0.15em] uppercase opacity-90 transition-opacity duration-200 leading-relaxed text-center px-4">
+          <p id="loadingText" class="text-sm font-bold text-red-500 tracking-[0.15em] uppercase opacity-90 transition-opacity duration-200 leading-relaxed text-center px-4" data-i18n="loadingInitial">
             데이터 업로딩...
           </p>
         </div>
@@ -103,30 +112,35 @@
 
     <main class="max-w-xl mx-auto px-5 py-12 md:py-20">
       <header class="text-center mb-12">
+        <div class="flex justify-end gap-1 mb-4" role="group" aria-label="Language">
+          <button type="button" id="langKo" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg border border-saju-border bg-saju-input text-saju-muted hover:text-white hover:border-saju-accent transition-all" data-lang="ko" title="한국어">KO</button>
+          <button type="button" id="langEn" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg border border-saju-border bg-saju-input text-saju-muted hover:text-white hover:border-saju-accent transition-all" data-lang="en" title="English">EN</button>
+          <button type="button" id="langJa" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg border border-saju-border bg-saju-input text-saju-muted hover:text-white hover:border-saju-accent transition-all" data-lang="ja" title="日本語">JA</button>
+        </div>
         <h1 class="text-4xl md:text-5xl font-black text-white mb-3 tracking-widest uppercase leading-tight drop-shadow-2xl">
-          Shadow<span class="text-saju-accent">.Report</span>
+          <span data-i18n="titleMain">Shadow</span><span class="text-saju-accent" data-i18n="titleAccent">.Report</span>
         </h1>
-        <p class="text-xs md:text-sm text-saju-muted font-bold tracking-[0.1em] uppercase opacity-90">Dark Psychology Profiler</p>
+        <p class="text-xs md:text-sm text-saju-muted font-bold tracking-[0.1em] uppercase opacity-90" data-i18n="subtitle">Dark Psychology Profiler</p>
       </header>
 
       <section class="bg-saju-card border border-gray-800 rounded-2xl shadow-2xl mb-12 p-6 md:p-8 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-saju-accent to-transparent opacity-40"></div>
         <div class="flex p-1 bg-black/40 rounded-xl mb-8 border border-gray-800/50" role="tablist">
-          <button type="button" id="tabGeneral" data-mode="general" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all bg-saju-accent text-white shadow-[0_0_15px_rgba(255,59,48,0.3)] tracking-[0.15em]" role="tab" aria-selected="true">◼ 심연</button>
-          <button type="button" id="tabCompatibility" data-mode="compatibility" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all text-gray-400 hover:text-white tracking-[0.15em]" role="tab" aria-selected="false">💔 파멸</button>
-          <button type="button" id="tabCareer" data-mode="career" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all text-gray-400 hover:text-white tracking-[0.15em]" role="tab" aria-selected="false">💼 생존</button>
+          <button type="button" id="tabGeneral" data-mode="general" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all bg-saju-accent text-white shadow-[0_0_15px_rgba(255,59,48,0.3)] tracking-[0.15em]" role="tab" aria-selected="true" data-i18n="tabGeneral">◼ 심연</button>
+          <button type="button" id="tabCompatibility" data-mode="compatibility" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all text-gray-400 hover:text-white tracking-[0.15em]" role="tab" aria-selected="false" data-i18n="tabCompatibility">💔 파멸</button>
+          <button type="button" id="tabCareer" data-mode="career" class="tab-btn flex-1 py-3 text-xs md:text-sm font-bold rounded-lg transition-all text-gray-400 hover:text-white tracking-[0.15em]" role="tab" aria-selected="false" data-i18n="tabCareer">💼 생존</button>
         </div>
 
         <form id="sajuForm" autocomplete="off" class="space-y-6">
           <div class="space-y-6">
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label for="birthdate" class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Birth Date</label>
+                <label for="birthdate" class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1" data-i18n="labelBirthDate">Birth Date</label>
                 <input id="birthdate" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="YYMMDD" required
                   class="w-full px-4 py-3.5 bg-saju-input border border-saju-border rounded-xl text-saju-text placeholder-gray-700 focus:outline-none focus:border-saju-accent focus:ring-1 focus:ring-saju-accent transition-all font-bold text-center text-lg tracking-widest shadow-inner" />
               </div>
               <div class="space-y-2">
-                <label for="birthHour" class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Birth Time</label>
+                <label for="birthHour" class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1" data-i18n="labelBirthTime">Birth Time</label>
                 <select id="birthHour" required class="w-full px-4 py-3.5 bg-saju-input border border-saju-border rounded-xl text-saju-text focus:outline-none focus:border-saju-accent focus:ring-1 focus:ring-saju-accent transition-all appearance-none text-sm font-bold tracking-widest shadow-inner pr-10 text-center">
                   <option value="">시간 선택</option>
                   <option value="23-01">자시 (23:00~01:00)</option>
@@ -146,46 +160,46 @@
             </div>
 
             <div class="space-y-2">
-              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Gender</label>
+              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1" data-i18n="labelGender">Gender</label>
               <div class="flex gap-3" role="radiogroup" aria-label="gender">
                 <label class="flex-1 cursor-pointer">
                   <input type="radio" name="gender" value="male" checked class="peer sr-only" />
-                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-widest transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner">Male</div>
+                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-widest transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner" data-i18n="genderMale">Male</div>
                 </label>
                 <label class="flex-1 cursor-pointer">
                   <input type="radio" name="gender" value="female" class="peer sr-only" />
-                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-widest transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner">Female</div>
+                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-widest transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner" data-i18n="genderFemale">Female</div>
                 </label>
                 <label class="flex-1 cursor-pointer">
                   <input type="radio" name="gender" value="other" class="peer sr-only" />
-                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-[0.15em] transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner">기타</div>
+                  <div class="py-3 border border-saju-border bg-saju-input rounded-xl text-center text-saju-muted font-black text-xs uppercase tracking-[0.15em] transition-all peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent peer-checked:shadow-[0_0_10px_rgba(255,59,48,0.3)] hover:border-gray-500 shadow-inner" data-i18n="genderOther">기타</div>
                 </label>
               </div>
             </div>
 
             <div id="relationshipSection" class="hidden space-y-2">
-              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Relationship Status</label>
+              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1" data-i18n="labelRelationship">Relationship Status</label>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-2" role="radiogroup" aria-label="relationship">
-                <label class="cursor-pointer"><input type="radio" name="relationship" value="single" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">솔로</div></label>
-                <label class="cursor-pointer"><input type="radio" name="relationship" value="dating" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">연애 중</div></label>
-                <label class="cursor-pointer"><input type="radio" name="relationship" value="plateau" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">위기</div></label>
-                <label class="cursor-pointer"><input type="radio" name="relationship" value="married" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">결혼</div></label>
-                <label class="cursor-pointer"><input type="radio" name="relationship" value="divorced" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">이혼</div></label>
-                <label class="cursor-pointer"><input type="radio" name="relationship" value="widowed" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">사별</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="single" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="relSingle">솔로</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="dating" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="relDating">연애 중</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="plateau" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="relPlateau">위기</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="married" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="relMarried">결혼</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="divorced" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="relDivorced">이혼</div></label>
+                <label class="cursor-pointer"><input type="radio" name="relationship" value="widowed" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="relWidowed">사별</div></label>
               </div>
             </div>
 
             <div id="careerStatusSection" class="hidden space-y-2">
-              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Current Status</label>
+              <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1" data-i18n="labelCareer">Current Status</label>
               <div class="grid grid-cols-3 gap-2" role="radiogroup" aria-label="career-status">
-                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="seeking" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">취준</div></label>
-                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="burnout" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">현타</div></label>
-                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="moving" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">이직</div></label>
+                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="seeking" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="careerSeeking">취준</div></label>
+                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="burnout" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="careerBurnout">현타</div></label>
+                <label class="cursor-pointer"><input type="radio" name="careerStatus" value="moving" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="careerMoving">이직</div></label>
               </div>
             </div>
 
             <div id="partnerSection" class="hidden space-y-4 pt-6 border-t border-gray-800">
-              <p class="text-xs text-saju-accent font-black uppercase tracking-widest text-center">--- Target Subject ---</p>
+              <p class="text-xs text-saju-accent font-black uppercase tracking-widest text-center" data-i18n="targetSubject">--- Target Subject ---</p>
               <div class="grid grid-cols-2 gap-4">
                 <input id="partnerBirthdate" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="YYMMDD" class="w-full px-4 py-3 bg-saju-input border border-saju-border rounded-xl text-saju-text text-center font-bold tracking-widest shadow-inner focus:outline-none focus:border-saju-accent focus:ring-1 focus:ring-saju-accent transition-all" />
                 <select id="partnerBirthHour" class="w-full px-4 py-3 bg-saju-input border border-saju-border rounded-xl text-saju-text text-sm font-bold tracking-widest shadow-inner pr-10 focus:outline-none focus:border-saju-accent focus:ring-1 focus:ring-saju-accent transition-all text-center">
@@ -205,17 +219,17 @@
                 </select>
               </div>
               <div class="space-y-2">
-                <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1">Partner Gender</label>
+                <label class="block text-[11px] font-black text-saju-muted uppercase tracking-widest pl-1" data-i18n="labelPartnerGender">Partner Gender</label>
                 <div class="flex gap-3" role="radiogroup" aria-label="partner gender">
-                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="male" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">남</div></label>
-                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="female" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">여</div></label>
-                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="other" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner">기타</div></label>
+                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="male" checked class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="partnerMale">남</div></label>
+                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="female" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="partnerFemale">여</div></label>
+                  <label class="flex-1 cursor-pointer"><input type="radio" name="partnerGender" value="other" class="peer sr-only" /><div class="py-2.5 border border-saju-border bg-saju-input rounded-lg text-center text-xs text-saju-muted font-bold tracking-[0.15em] peer-checked:border-saju-accent peer-checked:text-white peer-checked:bg-saju-accent/20 transition-all shadow-inner" data-i18n="partnerOther">기타</div></label>
                 </div>
               </div>
             </div>
           </div>
 
-          <button type="submit" id="analyzeBtn" class="w-full bg-saju-accent hover:bg-red-600 text-white font-black py-5 rounded-xl shadow-[0_0_25px_rgba(255,59,48,0.2)] hover:shadow-[0_0_40px_rgba(255,59,48,0.4)] transition-all uppercase tracking-widest text-sm border border-red-500/20 active:scale-[0.98]">
+          <button type="submit" id="analyzeBtn" class="w-full bg-saju-accent hover:bg-red-600 text-white font-black py-5 rounded-xl shadow-[0_0_25px_rgba(255,59,48,0.2)] hover:shadow-[0_0_40px_rgba(255,59,48,0.4)] transition-all uppercase tracking-widest text-sm border border-red-500/20 active:scale-[0.98]" data-i18n="btnDecode">
             DECODE DESTINY
           </button>
         </form>
@@ -224,16 +238,16 @@
       <div id="status" class="hidden mb-6 px-6 py-4 rounded-lg border border-gray-800 text-center text-sm font-bold tracking-[0.15em]" aria-live="polite"></div>
 
       <section class="bg-saju-card border border-gray-800 rounded-2xl shadow-2xl p-6 md:p-8">
-        <h2 class="text-xl font-black text-white mb-6 tracking-[0.15em]">결과</h2>
+        <h2 class="text-xl font-black text-white mb-6 tracking-[0.15em]" data-i18n="resultTitle">결과</h2>
         <article id="result" class="prose prose-invert prose-p:text-[#E0E0E0] prose-p:leading-relaxed max-w-none min-h-[200px] space-y-8">
           <div class="text-center py-12 text-saju-muted">
             <p class="text-lg mb-2">👁️</p>
-            <p class="font-bold tracking-[0.15em]">생년월일을 입력하고 DECODE DESTINY를 실행하세요</p>
+            <p class="font-bold tracking-[0.15em]" data-i18n="resultPlaceholder">생년월일을 입력하고 DECODE DESTINY를 실행하세요</p>
           </div>
         </article>
         <div class="mt-8">
           <button type="button" onclick="window.downloadInstaCard&&window.downloadInstaCard()" class="w-full bg-saju-input border border-saju-border text-saju-text px-8 py-4 rounded-full font-black hover:border-saju-accent hover:text-saju-accent transition-all flex items-center justify-center gap-2 text-sm tracking-widest uppercase shadow-inner">
-            <span>📸</span> <span>Save Report</span>
+            <span>📸</span> <span data-i18n="saveReport">Save Report</span>
           </button>
           <div id="adContainer" class="w-full mt-4 border border-gray-800 rounded-xl overflow-hidden">
             <ins class="adsbygoogle"
@@ -250,7 +264,7 @@
       </section>
 
       <footer class="mt-8 px-4 py-6 border border-gray-800 rounded-xl text-center">
-        <p class="text-sm text-saju-muted font-bold tracking-[0.15em]">당신의 어둠을 읽다 · <span class="text-saju-accent font-black">FATE.AI · SHADOW REPORT</span></p>
+        <p class="text-sm text-saju-muted font-bold tracking-[0.15em]"><span data-i18n="footerBefore">당신의 어둠을 읽다 · </span><span class="text-saju-accent font-black" data-i18n="footerBrand">FATE.AI · SHADOW REPORT</span></p>
       </footer>
     </main>
     <script type="module" src="./script.js"></script>
