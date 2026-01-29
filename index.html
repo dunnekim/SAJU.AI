@@ -87,7 +87,8 @@
       <h1>AI 사주 팩폭 · 운명 해킹 · 다크 심리 프로파일</h1>
       <h2>가스라이팅 테스트, 나르시시스트 특징, 도태 시나리오, 흑화 테스트</h2>
     </div>
-    <div id="loadingOverlay" class="hidden fixed inset-0 bg-[#000000]/95 backdrop-blur-md z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-500">
+    <!-- 로딩 시에도 스크롤 가능: overflow-y-auto, body 잠금 없음 -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-[#000000]/95 backdrop-blur-md z-50 flex flex-col items-center justify-center p-6 overflow-y-auto transition-opacity duration-500">
       <div class="text-center mb-12 relative w-full max-w-md">
         <div class="mb-10 relative inline-block">
           <span class="text-7xl animate-pulse-slow grayscale opacity-80">👁️</span>
@@ -105,13 +106,14 @@
           </div>
         </div>
       </div>
-      <div id="ad-slot-loading" class="w-full max-w-[320px] border border-gray-800 rounded flex items-center justify-center relative overflow-hidden shadow-2xl mt-4">
+      <!-- Moneymaker UI: 300x250 화면 중앙 = Google AdSense Area (구글 애드센스 코드로 교체) -->
+      <div id="ad-slot-loading" class="w-[300px] h-[250px] min-w-[300px] min-h-[250px] border border-gray-800 rounded-lg flex items-center justify-center relative overflow-hidden shadow-2xl mt-8 bg-gray-900/80" aria-label="Advertisement" data-ad-space="Google AdSense Area">
         <ins class="adsbygoogle"
-             style="display:block"
+             style="display:block; width:300px; height:250px"
              data-ad-client="ca-pub-4209789466667997"
              data-ad-slot="7537891159"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+             data-ad-format="rectangle"
+             data-full-width-responsive="false"></ins>
         <script>
              (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
@@ -268,15 +270,15 @@
 
       <div id="status" class="hidden mb-6 px-6 py-4 rounded-lg border border-gray-800 text-center text-sm font-bold tracking-[0.15em]" aria-live="polite"></div>
 
-      <section class="bg-saju-card border border-gray-800 rounded-2xl shadow-2xl p-6 md:p-8">
-        <h2 class="text-xl font-black text-white mb-6 tracking-[0.15em]" data-i18n="resultTitle">결과</h2>
-        <article id="result" class="prose prose-invert prose-p:text-[#E0E0E0] prose-p:leading-relaxed max-w-none min-h-[200px] space-y-8">
+      <section class="bg-saju-card border border-gray-800 rounded-2xl shadow-2xl p-4 md:p-5">
+        <h2 class="text-xl font-black text-white mb-3 tracking-[0.15em]" data-i18n="resultTitle">결과</h2>
+        <article id="result" class="prose prose-invert prose-p:text-[#E0E0E0] prose-p:leading-relaxed max-w-none min-h-[200px] space-y-4">
           <div class="text-center py-12 text-saju-muted">
             <p class="text-lg mb-2">👁️</p>
             <p class="font-bold tracking-[0.15em]" data-i18n="resultPlaceholder">생년월일을 입력하고 DECODE DESTINY를 실행하세요</p>
           </div>
         </article>
-        <div class="mt-8">
+        <div class="mt-4">
           <button type="button" onclick="window.downloadInstaCard&&window.downloadInstaCard()" class="w-full bg-saju-input border border-saju-border text-saju-text px-8 py-4 rounded-full font-black hover:border-saju-accent hover:text-saju-accent transition-all flex items-center justify-center gap-2 text-sm tracking-widest uppercase shadow-inner">
             <span>📸</span> <span data-i18n="saveReport">Save Report</span>
           </button>
