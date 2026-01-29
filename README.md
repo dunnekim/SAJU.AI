@@ -1,48 +1,40 @@
-# 🔮 SAJU.AI
+# 👁️ FATE.AI · SHADOW REPORT
 
-당신의 내면을 읽는 심리 분석 웹앱입니다.  
-만세력 계산은 코드가 결정론적으로 처리하고, 심리 분석은 AI가 담당합니다.
+**당신의 어둠을 읽다.**  
+생년월일·성별 입력 → 만세력은 코드가 결정론적으로 계산하고, 다크 심리 프로파일은 OpenAI가 담당합니다.
 
 ---
 
 ## 🎯 핵심 특징
 
-- ✅ **정확한 계산**: `lunar-javascript`로 연주/월주/일주/시주를 정확히 계산
-- ✅ **오행 매핑 고정**: 천간/지지 → 오행 변환을 코드에 하드코딩
-- ✅ **심리 분석**: 계산된 JSON을 기반으로 심리/성향 분석
-- ✅ **간소한 입력**: 생년월일 6자리 + 시간만 입력
+- ✅ **정확한 계산**: `lunar-javascript`로 연주/월주/일주/시주 계산
+- ✅ **오행 매핑 고정**: 천간/지지 → 오행 변환 하드코딩
+- ✅ **다크 프로파일링**: V3.5 Deep Dark 엔진 — 병리학·방어기제·파국 예언
+- ✅ **모드**: 심연(general) / 궁합(compatibility) / 커리어(career)
+- ✅ **Supabase 캐시**: 동일 입력 재분석 시 API 비용 절감
+- ✅ **하이브리드 환경변수**: 로컬 `.env` + 클라우드 `process.env` (Render 호환)
 
 ---
 
 ## 🚀 실행 방법
 
-### 1. 페이지 접속
+### 로컬
 
-#### 방법 A: URL 파라미터로 자동 등록 (권장)
-```
-https://your-page.com/?key=sk-proj-...
-```
-- URL에 `?key=인증키` 형태로 접속하면 자동으로 등록됩니다
-- 보안을 위해 URL에서 키가 자동으로 제거됩니다
-- 이후 방문 시 키 입력 없이 바로 사용 가능
+1. 프로젝트 루트에 `.env` 생성:
+   ```env
+   OPENAI_API_KEY=sk-proj-...
+   SUPABASE_URL=https://....supabase.co
+   SUPABASE_KEY=eyJ...
+   ```
+2. `npm install` 후 `npm start` (기본 포트 5500)
+3. 브라우저에서 `http://localhost:5500` 접속
 
-#### 방법 B: 모달에서 수동 입력
-- 처음 방문 시 **인증 키 입력 모달**이 자동으로 표시됩니다
-- 인증 키를 입력하고 "저장하고 시작하기" 클릭
-- 키는 **브라우저 LocalStorage**에만 저장됩니다 (서버 전송 없음)
+### 클라우드 (Render)
 
-인증 키 발급: [OpenAI Platform](https://platform.openai.com/api-keys)
-
-### 2. 사주 분석
-
-1. 생년월일 6자리 입력 (예: 930721)
-2. 태어난 시간대 선택 (예: 오시 11:00~13:00)
-3. 성별 및 연애 상태 선택
-4. **"✨ 내 사주 분석하기"** 버튼 클릭
-
-### 3. 인증 키 변경
-
-- 하단 푸터의 "🔑 인증 키 변경" 버튼을 클릭하면 다시 입력 가능합니다
+- **Build**: `npm install`  
+- **Start**: `node server.mjs`  
+- **Environment**: Render 대시보드 → Environment 탭에 `OPENAI_API_KEY`, `SUPABASE_URL`, `SUPABASE_KEY` 등록  
+- 키는 `process.env`로 주입되며, `.env` 파일은 불필요합니다.
 
 ---
 
@@ -50,61 +42,53 @@ https://your-page.com/?key=sk-proj-...
 
 ```
 MANSE/
-├── index.html      # 메인 HTML (importmap 포함)
-├── style.css       # 다크 모던 카드 UI
-├── script.js       # 만세력 계산 + Gemini 연결
-├── .gitignore      # .env 파일 제외
-└── README.md       # 이 파일
+├── index.html      # 메인 UI (다크 테마, Tailwind)
+├── style.css       # 보조 스타일
+├── script.js       # 만세력 계산 + API 호출 + 로딩/결과 UI
+├── server.mjs      # Node HTTP 서버, OpenAI 프록시, Supabase 캐시
+├── package.json    # type: module, start → node server.mjs
+├── .env            # 로컬용 (OPENAI_API_KEY, SUPABASE_*), 저장소 제외
+├── README.md
+├── QUICKSTART.md
+├── SETUP.md
+└── DESIGN.md
 ```
-
----
-
-## 🔑 API Key 관리
-
-- **권장**: `.env` + `node server.mjs` (자동 로드)
-- **대안**: 웹 UI에 직접 입력 후 “브라우저에 저장”
 
 ---
 
 ## 🛠️ 기술 스택
 
-- **UI**: HTML5, Tailwind CSS (Utility-first CSS framework)
-- **디자인**: saju-kid.com 영감, 미니멀리즘 + 따뜻한 테라코타 색상
-- **로직**: ES6+ Modules
-- **라이브러리** (CDN):
-  - `lunar-javascript`: 만세력(사주) 계산
-  - `OpenAI API`: 심리 분석 (gpt-4o-mini)
-  - `marked.js`: Markdown 렌더링
-  - `tailwindcss`: Utility CSS 프레임워크
+- **프론트**: HTML5, Tailwind CSS, Pretendard, marked.js, html2canvas
+- **백엔드**: Node.js (plain http), OpenAI gpt-4o-mini
+- **캐시/DB**: Supabase (`saju_reports` 테이블)
+- **배포**: Render (또는 동일 스펙 호환)
 
 ---
 
 ## 📖 작동 원리
 
-1. **계산**: 코드가 `lunar-javascript`로 사주(四柱) 계산
-2. **분석**: 천간/지지를 오행으로 변환 (하드코딩 매핑)
-3. **해석**: 계산된 JSON을 기반으로 심리 분석
-4. **출력**: Markdown 형태로 분석 결과 표시
-
-→ **계산과 해석을 분리하여 정확도를 보장합니다.**
+1. **계산**: `lunar-javascript`로 사주(四柱) 계산 → JSON 생성
+2. **오행 변환**: 천간/지지 → 오행 개수·일주(day_master) 하드코딩 매핑
+3. **분석 요청**: `POST /api/analyze`에 `{ sajuJson, mode }` 전송
+4. **캐시**: 요청 해시로 Supabase 조회 → 있으면 즉시 반환, 없으면 OpenAI 호출 후 저장
+5. **출력**: Markdown 렌더링, [[…]] 훅 추출(인스타 카드용)
 
 ---
 
 ## ⚠️ 주의사항
 
-- 본 앱은 점/예언이 아니라 **성향·심리 분석**을 목적으로 합니다.
-- 인증 키는 브라우저 LocalStorage에만 저장되며, 서버로 전송되지 않습니다.
-- GitHub Pages 배포 시에도 안전하게 사용할 수 있습니다 (키는 코드에 포함되지 않음).
-- URL 파라미터로 키를 전달할 때는 HTTPS를 사용하세요.
-- `file://` 프로토콜로는 모듈 로딩이 안 될 수 있으니 로컬 서버 사용을 권장합니다.
+- 본 서비스는 **성향·심리 프로파일**을 목적으로 하며, 점/운세가 아닙니다.
+- API 키는 **서버 환경**에만 두고, 클라이언트에 노출하지 않습니다.
+- CORS: `ALLOWED_ORIGINS`에 프론트 출처(localhost, fate.ai.kr, Render URL, GitHub Pages 등)를 등록해야 합니다.
 
 ---
 
-## 📚 참고 자료
+## 📚 참고
 
-- [lunar-javascript GitHub](https://github.com/6tail/lunar-javascript)
-- [OpenAI API Docs](https://platform.openai.com/docs)
+- [lunar-javascript](https://github.com/6tail/lunar-javascript)
+- [OpenAI API](https://platform.openai.com/docs)
+- [Supabase](https://supabase.com/docs)
 
 ---
 
-**Made with 🔮 by SAJU.AI**
+**Made with 👁️ by FATE.AI**

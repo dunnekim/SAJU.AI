@@ -5,6 +5,17 @@
   --saju-accent: #FF6B50;
 }
 
+/* 로딩 오버레이: 텍스트를 Flex 흐름에 맡겨 모바일에서 겹침 방지 */
+#loadingText {
+  color: var(--saju-accent, #FF3B30);
+  font-family: "Pretendard Variable", Pretendard, sans-serif;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 30px 0;
+  padding: 0 20px;
+  line-height: 1.5;
+}
+
 /* 기본 리셋 */
 * {
   box-sizing: border-box;

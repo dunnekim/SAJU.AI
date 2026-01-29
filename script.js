@@ -49,7 +49,20 @@ const translations = {
     saveReport: "Save Report",
     footerBefore: "당신의 어둠을 읽다 · ",
     footerBrand: "FATE.AI · SHADOW REPORT",
-    loadingInitial: "데이터 업로딩..."
+    loadingInitial: "데이터 업로딩...",
+    timeSelect: "시간 선택",
+    time23_01: "자시 (23:00~01:00)",
+    time01_03: "축시 (01:00~03:00)",
+    time03_05: "인시 (03:00~05:00)",
+    time05_07: "묘시 (05:00~07:00)",
+    time07_09: "진시 (07:00~09:00)",
+    time09_11: "사시 (09:00~11:00)",
+    time11_13: "오시 (11:00~13:00)",
+    time13_15: "미시 (13:00~15:00)",
+    time15_17: "신시 (15:00~17:00)",
+    time17_19: "유시 (17:00~19:00)",
+    time19_21: "술시 (19:00~21:00)",
+    time21_23: "해시 (21:00~23:00)"
   },
   en: {
     titleMain: "SHADOW",
@@ -86,7 +99,20 @@ const translations = {
     saveReport: "Save Report",
     footerBefore: "Decode your shadow · ",
     footerBrand: "FATE.AI · SHADOW REPORT",
-    loadingInitial: "Loading data..."
+    loadingInitial: "Loading data...",
+    timeSelect: "Select time",
+    time23_01: "23:00–01:00 (Rat)",
+    time01_03: "01:00–03:00 (Ox)",
+    time03_05: "03:00–05:00 (Tiger)",
+    time05_07: "05:00–07:00 (Rabbit)",
+    time07_09: "07:00–09:00 (Dragon)",
+    time09_11: "09:00–11:00 (Snake)",
+    time11_13: "11:00–13:00 (Horse)",
+    time13_15: "13:00–15:00 (Goat)",
+    time15_17: "15:00–17:00 (Monkey)",
+    time17_19: "17:00–19:00 (Rooster)",
+    time19_21: "19:00–21:00 (Dog)",
+    time21_23: "21:00–23:00 (Pig)"
   },
   ja: {
     titleMain: "深淵の",
@@ -123,7 +149,20 @@ const translations = {
     saveReport: "レポート保存",
     footerBefore: "あなたの闇を読む · ",
     footerBrand: "FATE.AI · SHADOW REPORT",
-    loadingInitial: "データ読込中..."
+    loadingInitial: "データ読込中...",
+    timeSelect: "時刻を選択",
+    time23_01: "子時 (23:00～01:00)",
+    time01_03: "丑時 (01:00～03:00)",
+    time03_05: "寅時 (03:00～05:00)",
+    time05_07: "卯時 (05:00～07:00)",
+    time07_09: "辰時 (07:00～09:00)",
+    time09_11: "巳時 (09:00～11:00)",
+    time11_13: "午時 (11:00～13:00)",
+    time13_15: "未時 (13:00～15:00)",
+    time15_17: "申時 (15:00～17:00)",
+    time17_19: "酉時 (17:00～19:00)",
+    time19_21: "戌時 (19:00～21:00)",
+    time21_23: "亥時 (21:00～23:00)"
   }
 };
 
@@ -136,6 +175,17 @@ function updateLanguage() {
     }
   });
   updateLangButtons();
+  // Phase 6-1: MBTI 섹션은 한국어(ko)일 때만 표시
+  const mbtiSection = document.getElementById("mbtiSection");
+  if (mbtiSection) {
+    if (currentLang === "ko") {
+      mbtiSection.classList.remove("hidden");
+      mbtiSection.classList.add("space-y-2");
+    } else {
+      mbtiSection.classList.add("hidden");
+      mbtiSection.classList.remove("space-y-2");
+    }
+  }
 }
 
 /** 언어 전환 버튼 활성 스타일 갱신 */
@@ -436,7 +486,7 @@ const LOADING_SCRIPTS = [
 // Cynical Index (비판 수위): 모드별 0.0~1.0
 const CYNICAL_INDEX = { general: 0.7, compatibility: 1.0, career: 0.8 };
 
-export async function analyzeSaju({ sajuJson, mode = "general", ralphData: ralphDataIn, cynicalIndex: cynicalIndexIn }) {
+export async function analyzeSaju({ sajuJson, mode = "general", ralphData: ralphDataIn, cynicalIndex: cynicalIndexIn, mbti: mbtiIn }) {
   // GA4: 분석 시작 이벤트
   if (typeof gtag === "function") {
     gtag("event", "begin_analysis", {
@@ -449,6 +499,7 @@ export async function analyzeSaju({ sajuJson, mode = "general", ralphData: ralph
   const ralphData = ralphDataIn ?? (sajuJson.me != null
     ? { me: buildRalphData(sajuJson.me), partner: buildRalphData(sajuJson.partner) }
     : buildRalphData(sajuJson));
+  const mbti = (typeof mbtiIn === "string" && mbtiIn.trim()) ? mbtiIn.trim() : null;
 
   const startTime = Date.now();
   const API_URL = "https://fate-ai-rgea.onrender.com/api/analyze";
@@ -457,7 +508,7 @@ export async function analyzeSaju({ sajuJson, mode = "general", ralphData: ralph
   const response = await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ sajuJson, mode, lang: currentLang, ralphData, cynicalIndex }),
+    body: JSON.stringify({ sajuJson, mode, lang: currentLang, ralphData, cynicalIndex, mbti: mbti || null }),
   });
   const data = await response.json();
   if (!response.ok) throw new Error(data?.error?.message || "Server Error");
@@ -864,9 +915,10 @@ if (form) {
 
       // 로딩 오버레이 표시
       showLoadingOverlay();
-      
-      // API 호출 (모드 전달)
-      const md = await analyzeSaju({ sajuJson: sajuData, mode: currentMode });
+      const mbtiEl = document.getElementById("mbtiSelect");
+      const mbtiVal = mbtiEl && mbtiEl.value ? String(mbtiEl.value).trim() : null;
+      // API 호출 (모드 + MBTI 전달, 한국어일 때만 MBTI 입력 가능하나 값은 항상 전송)
+      const md = await analyzeSaju({ sajuJson: sajuData, mode: currentMode, mbti: mbtiVal || undefined });
       
       // 로딩 완료
       completeLoadingOverlay();

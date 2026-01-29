@@ -4,22 +4,22 @@
   },
   "name": "shadow-report",
   "version": "3.5.0",
-  "description": "당신의 내면을 읽는 심리 분석 웹앱입니다.  \r 만세력 계산은 코드가 결정론적으로 처리하고, 심리 분석은 AI가 담당합니다.",
-  "main": "script.js",
+  "description": "FATE.AI · SHADOW REPORT — 당신의 어둠을 읽는 다크 심리 프로파일링 웹앱.",
+  "main": "server.mjs",
   "scripts": {
     "start": "node server.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dunnekim/SAJU.AI.git"
+    "url": "git+https://github.com/dunnekim/FATE.AI.git"
   },
-  "keywords": [],
+  "keywords": ["fate", "saju", "shadow-report", "psychology", "openai", "supabase"],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/dunnekim/SAJU.AI/issues"
+    "url": "https://github.com/dunnekim/FATE.AI/issues"
   },
-  "homepage": "https://github.com/dunnekim/SAJU.AI#readme"
+  "homepage": "https://github.com/dunnekim/FATE.AI#readme"
 }
