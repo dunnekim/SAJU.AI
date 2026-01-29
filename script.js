@@ -62,7 +62,10 @@ const translations = {
     time15_17: "신시 (15:00~17:00)",
     time17_19: "유시 (17:00~19:00)",
     time19_21: "술시 (19:00~21:00)",
-    time21_23: "해시 (21:00~23:00)"
+    time21_23: "해시 (21:00~23:00)",
+    metaTitle: "FATE.AI · 당신의 파멸을 경고합니다",
+    metaDescription: "나르시시스트, 가스라이팅, 도태 시나리오... AI가 분석하는 당신의 추악한 심연. 멘탈 약한 분 클릭 금지.",
+    metaKeywords: "사주팩폭, 가스라이팅테스트, 나르시시스트특징, 소시오패스사주, 이별운, 도태남, 도태녀, 흑화테스트, AI점술"
   },
   en: {
     titleMain: "SHADOW",
@@ -112,7 +115,10 @@ const translations = {
     time15_17: "15:00–17:00 (Monkey)",
     time17_19: "17:00–19:00 (Rooster)",
     time19_21: "19:00–21:00 (Dog)",
-    time21_23: "21:00–23:00 (Pig)"
+    time21_23: "21:00–23:00 (Pig)",
+    metaTitle: "Why You're Failing: Dark Destiny Analysis",
+    metaDescription: "Stop blaming your zodiac. See your real flaws via AI.",
+    metaKeywords: "Bazi, Four Pillars, Dark Psychology, Brutal Truth, savage roast, AI destiny"
   },
   ja: {
     titleMain: "深淵の",
@@ -162,7 +168,10 @@ const translations = {
     time15_17: "申時 (15:00～17:00)",
     time17_19: "酉時 (17:00～19:00)",
     time19_21: "戌時 (19:00～21:00)",
-    time21_23: "亥時 (21:00～23:00)"
+    time21_23: "亥時 (21:00～23:00)",
+    metaTitle: "【閲覧注意】あなたの運命の残酷な真実",
+    metaDescription: "四柱推命で暴く、あなたの「裏」性格と未来。覚悟がある人だけクリックしてください。",
+    metaKeywords: "四柱推命, 辛口占い, 毒舌占い, AI運命"
   }
 };
 
@@ -186,6 +195,21 @@ function updateLanguage() {
       mbtiSection.classList.remove("space-y-2");
     }
   }
+  // Phase 1: 언어별 SEO/바이럴 메타 (title, description, keywords, og, twitter)
+  const t = translations[currentLang];
+  if (t && t.metaTitle) document.title = t.metaTitle;
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc && t && t.metaDescription) desc.setAttribute("content", t.metaDescription);
+  const kw = document.querySelector('meta[name="keywords"]');
+  if (kw && t && t.metaKeywords) kw.setAttribute("content", t.metaKeywords);
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if (ogTitle && t && t.metaTitle) ogTitle.setAttribute("content", t.metaTitle);
+  const ogDesc = document.querySelector('meta[property="og:description"]');
+  if (ogDesc && t && t.metaDescription) ogDesc.setAttribute("content", t.metaDescription);
+  const twTitle = document.querySelector('meta[property="twitter:title"]');
+  if (twTitle && t && t.metaTitle) twTitle.setAttribute("content", t.metaTitle);
+  const twDesc = document.querySelector('meta[property="twitter:description"]');
+  if (twDesc && t && t.metaDescription) twDesc.setAttribute("content", t.metaDescription);
 }
 
 /** 언어 전환 버튼 활성 스타일 갱신 */
@@ -375,6 +399,24 @@ function countFiveElementsFromPillars(fourPillars) {
   return counts;
 }
 
+/** 사주 객체에서 가장 강한 오행 키 반환 (wood/fire/earth/metal/water) */
+function getStrongestElementKey(saju) {
+  if (!saju) return null;
+  const counts = saju.me ? saju.me.five_elements_count : saju.five_elements_count;
+  if (!counts || typeof counts !== "object") return null;
+  const entries = Object.entries(counts).filter(([, v]) => Number.isFinite(v));
+  if (!entries.length) return null;
+  entries.sort((a, b) => b[1] - a[1]);
+  return entries[0][0];
+}
+
+/** 오행 키 → 언어별 표기 (동적 OG 이미지용) */
+const ELEMENT_LABEL = {
+  ko: { wood: "목", fire: "화", earth: "토", metal: "금", water: "수" },
+  en: { wood: "Wood", fire: "Fire", earth: "Earth", metal: "Metal", water: "Water" },
+  ja: { wood: "木", fire: "火", earth: "土", metal: "金", water: "水" },
+};
+
 // 십신(十神): 일간 기준 타 천간과의 관계 (비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인·일주)
 const GAN_ORDER = "甲乙丙丁戊己庚辛壬癸";
 function getGanIndex(gan) {
@@ -466,22 +508,45 @@ export function calculateSaju(year, month, day, hour, minute) {
 }
 
 // ------------------------------------------------------------------
-// [Dynamic Wait-Gate] 캐시 히트 5초 / 캐시 미스 시 cynicalIndex에 따라 최대 18초 (수익화 극대화)
+// [The Moneymaker UI] Ad-Optimized Loading Screen
+// - 지연 시간: MIN_TOTAL_LOADING_MS(4초) = 광고 노출 보장 시간
+// - 광고 위치: #ad-slot-loading 300x250 화면 중앙
+// - 이탈 방지: 로딩 멘트 6개를 LOADING_MSG_INTERVAL_MS마다 순환 (60~80초 로딩 가정)
 // ------------------------------------------------------------------
-const WAIT_CACHE_MS = 5000;   // 캐시 히트: UX 보상 → 5초 고정
-const WAIT_MISS_BASE_MS = 12000;  // 캐시 미스 기본
-const WAIT_MISS_EXTRA_MS = 6000;  // cynicalIndex 1.0일 때 +6초 → 최대 18초
+const WAIT_CACHE_MS = 5000;
+const WAIT_MISS_BASE_MS = 12000;
+const WAIT_MISS_EXTRA_MS = 6000;
 const WAIT_MISS_MAX_MS = 18000;
-const INITIAL_WAIT_MS = 18000;    // 로딩 스크립트 주기 (최대 대기 시간 기준)
+const INITIAL_WAIT_MS = 18000;
+const MIN_TOTAL_LOADING_MS = 4000;   // 광고 노출용 최소 로딩 시간 (setTimeout 4초 보장)
+const LOADING_MSG_INTERVAL_MS = 10000; // 로딩 문구 순환 간격: 6문구 × 10초 ≈ 60초 (60~80초 로딩에 맞춤)
 
-const LOADING_SCRIPTS = [
-  { progress: 10, text: "사회적 가면(Persona) 데이터 강제 분리 중..." },
-  { progress: 30, text: "표면적 위선 패턴 감지... 1차 방어기제 해제" },
-  { progress: 50, text: "유년기 결핍 데이터 역추적 중..." },
-  { progress: 70, text: "억눌린 파괴적 본능(Id) 동기화 완료" },
-  { progress: 85, text: "5년 후 사회적 도태 확률 시뮬레이션 중..." },
-  { progress: 95, text: "당신의 심연을 텍스트로 변환하는 중..." },
-];
+const LOADING_SCRIPTS_BY_LANG = {
+  ko: [
+    { progress: 10, text: "당신의 운명에서 불행을 추출하는 중..." },
+    { progress: 25, text: "숨기고 싶은 과거를 스캔 중..." },
+    { progress: 45, text: "업보(karma) 계산 중..." },
+    { progress: 60, text: "방어기제 해체 및 본능 동기화..." },
+    { progress: 80, text: "5년 후 파국 시뮬레이션 중..." },
+    { progress: 95, text: "당신의 심연을 텍스트로 변환하는 중..." },
+  ],
+  en: [
+    { progress: 10, text: "Extracting misery from your destiny..." },
+    { progress: 25, text: "Scanning the past you hid..." },
+    { progress: 45, text: "Judging your choices..." },
+    { progress: 60, text: "Summoning demons. Syncing Id..." },
+    { progress: 80, text: "Simulating your ruin in 5 years..." },
+    { progress: 95, text: "Generating your verdict..." },
+  ],
+  ja: [
+    { progress: 10, text: "あなたの運命から不幸を抽出中..." },
+    { progress: 25, text: "隠した過去をスキャン中..." },
+    { progress: 45, text: "業を計算中..." },
+    { progress: 60, text: "防衛機制を解除し、本能を同期中..." },
+    { progress: 80, text: "5年後の破滅をシミュレート中..." },
+    { progress: 95, text: "深淵をテキストに変換中..." },
+  ],
+};
 
 // Cynical Index (비판 수위): 모드별 0.0~1.0
 const CYNICAL_INDEX = { general: 0.7, compatibility: 1.0, career: 0.8 };
@@ -516,18 +581,36 @@ export async function analyzeSaju({ sajuJson, mode = "general", ralphData: ralph
   const content = data?.choices?.[0]?.message?.content;
   if (!content) throw new Error("분석 결과가 비어 있습니다.");
 
-  // 가변 대기: 캐시 히트 → 5초, 캐시 미스 → cynicalIndex 높을수록 최대 18초
+  // 가변 대기 + 광고 노출용 최소 4초 보장 (The Suspense Gap)
   const requiredWait = data.isCached === true
     ? WAIT_CACHE_MS
     : Math.min(WAIT_MISS_MAX_MS, WAIT_MISS_BASE_MS + (cynicalIndex * WAIT_MISS_EXTRA_MS));
   const elapsed = Date.now() - startTime;
-  const remainingWait = Math.max(0, requiredWait - elapsed);
+  const minTotal = Math.max(requiredWait, MIN_TOTAL_LOADING_MS);
+  const remainingWait = Math.max(0, minTotal - elapsed);
 
   // 프로그레스 바를 남은 시간에 맞춰 100%까지 선형 보간
   updateLoadingRemaining(remainingWait);
   await new Promise(resolve => setTimeout(resolve, remainingWait));
 
   return content;
+}
+
+// [Dynamic OG Image] 배포 시 og-api URL로 설정 (예: https://fate-ai-og.vercel.app/api/og)
+const OG_IMAGE_BASE = typeof window !== "undefined" && window.OG_IMAGE_BASE ? window.OG_IMAGE_BASE : "";
+
+/** 결과 공유용 동적 OG 이미지 URL로 meta 갱신 (og-api 배포 시에만 동작) */
+function updateDynamicOgImage() {
+  if (!OG_IMAGE_BASE || typeof document === "undefined") return;
+  const mbti = (window.__sajuMbti || "").toUpperCase().slice(0, 4) || "????";
+  const element = (window.__sajuStrongestElement || "Soul").slice(0, 20);
+  const keyword = (window.__sajuHookText || "Your Dark Truth").slice(0, 30);
+  const lang = currentLang === "ja" ? "jp" : currentLang;
+  const url = `${OG_IMAGE_BASE}?mbti=${encodeURIComponent(mbti)}&element=${encodeURIComponent(element)}&keyword=${encodeURIComponent(keyword)}&lang=${lang}`;
+  const ogImage = document.querySelector('meta[property="og:image"]');
+  if (ogImage) ogImage.setAttribute("content", url);
+  const twImage = document.querySelector('meta[property="twitter:image"]');
+  if (twImage) twImage.setAttribute("content", url);
 }
 
 // ---------- UI wiring ----------
@@ -552,28 +635,32 @@ function showLoadingOverlay() {
   overlay.classList.add("flex");
 
   bar.style.width = "0%";
-  text.textContent = "데이터 업로딩...";
+  const scripts = LOADING_SCRIPTS_BY_LANG[currentLang] || LOADING_SCRIPTS_BY_LANG.en;
+  const firstText = scripts[0]?.text || "Loading...";
+  text.textContent = firstText;
   text.style.opacity = "1";
 
-  let currentStep = 0;
-  const totalSteps = LOADING_SCRIPTS.length;
-  const stepDuration = INITIAL_WAIT_MS / totalSteps;
+  let msgIndex = 0;
+  const totalSteps = scripts.length;
+  const FADE_MS = 280;
 
-  loadingInterval = setInterval(() => {
-    if (currentStep < totalSteps) {
-      const script = LOADING_SCRIPTS[currentStep];
+  function tickLoadingMessage() {
+    msgIndex = (msgIndex + 1) % totalSteps;
+    const script = scripts[msgIndex];
 
-      text.style.opacity = "0";
-      setTimeout(() => {
-        text.textContent = script.text;
+    text.style.opacity = "0";
+    setTimeout(() => {
+      text.textContent = script.text;
+      requestAnimationFrame(() => {
         text.style.opacity = "1";
-      }, 200);
+      });
+    }, FADE_MS);
 
-      const randomVar = Math.random() * 5;
-      bar.style.width = `${Math.min(99, script.progress + randomVar)}%`;
-      currentStep++;
-    }
-  }, stepDuration);
+    const randomVar = Math.random() * 5;
+    bar.style.width = `${Math.min(99, script.progress + randomVar)}%`;
+  }
+
+  loadingInterval = setInterval(tickLoadingMessage, LOADING_MSG_INTERVAL_MS);
 }
 
 /**
@@ -646,7 +733,7 @@ function clearStatus() {
   statusEl.textContent = "";
 }
 
-// 인스타 스토리 공유 카드 — [[ ]] 훅 우선 (잘림 방지), 없으면 마지막 문장 폴백
+// 인스타 스토리 공유 카드 — AI가 쓴 [[독설 한마디]]를 단일 소스로 사용. 없을 때만 마지막 문장 폴백
 function escapeHtml(s) {
   const div = document.createElement('div');
   div.textContent = s;
@@ -661,8 +748,9 @@ window.downloadInstaCard = async function () {
     return;
   }
 
-  let hookText = window.__sajuHookText || '';
-  if (!hookText.trim()) {
+  // [[ ]] 훅이 있으면 반드시 그걸로; 공유 시 사용자 심장을 찌르는 '결정적 한 방'
+  let hookText = (window.__sajuHookText || '').trim();
+  if (!hookText) {
     const lastSection = sections[sections.length - 1];
     const proseEl = lastSection ? lastSection.querySelector('.prose') : null;
     const fullText = proseEl ? proseEl.innerText : '';
@@ -744,16 +832,16 @@ function renderMarkdown(md) {
     const bodyLines = lines.slice(1).join('\n').trim();
 
     const card = document.createElement('div');
-    card.className = 'section-card bg-[#1A1A1A] p-6 md:p-8 rounded-2xl shadow-lg border border-gray-800 mb-8 hover:border-red-900/50 transition-colors';
+    card.className = 'section-card bg-[#1A1A1A] p-3 md:p-4 rounded-2xl shadow-lg border border-gray-800 mb-2 hover:border-red-900/50 transition-colors';
 
     const titleEl = document.createElement('h2');
     titleEl.className = cardIndex === 0
-      ? 'text-xl font-bold text-red-500 mb-6 mt-2'
-      : 'text-xl font-bold text-red-500 mt-12 mb-6';
+      ? 'text-lg font-bold text-red-500 mb-2 mt-1'
+      : 'text-lg font-bold text-red-500 mt-2 mb-2';
     titleEl.textContent = titleLine;
 
     const bodyEl = document.createElement('div');
-    bodyEl.className = 'prose prose-invert prose-p:text-[#E0E0E0] prose-p:leading-relaxed prose-p:text-lg prose-p:mb-6 max-w-none';
+    bodyEl.className = 'prose prose-invert prose-p:text-[#E0E0E0] prose-p:leading-tight prose-p:text-base prose-p:mb-1 max-w-none';
     bodyEl.innerHTML = window.marked.parse(bodyLines);
 
     card.appendChild(titleEl);
@@ -923,9 +1011,15 @@ if (form) {
       // 로딩 완료
       completeLoadingOverlay();
       
+      // 결과 공유용 데이터 저장 (동적 OG 이미지·인스타 카드)
+      const strongestKey = getStrongestElementKey(sajuData);
+      window.__sajuStrongestElement = strongestKey ? (ELEMENT_LABEL[currentLang]?.[strongestKey] || ELEMENT_LABEL.en[strongestKey] || strongestKey) : "Soul";
+      window.__sajuMbti = mbtiVal || "";
+
       // 결과 렌더링
       setStatus("분석 완료. 아래 결과를 확인하세요.", "ok");
       renderMarkdown(md);
+      updateDynamicOgImage();
 
       // GA4: 결과 조회 완료 이벤트 (로딩 바 사라진 시점)
       if (typeof gtag === "function") {

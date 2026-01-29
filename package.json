@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@supabase/supabase-js": "^2.93.1"
+    "@supabase/supabase-js": "^2.93.1",
+    "@vercel/og": "^0.8.6"
   },
   "name": "shadow-report",
   "version": "3.5.0",
@@ -14,7 +15,14 @@
     "type": "git",
     "url": "git+https://github.com/dunnekim/FATE.AI.git"
   },
-  "keywords": ["fate", "saju", "shadow-report", "psychology", "openai", "supabase"],
+  "keywords": [
+    "fate",
+    "saju",
+    "shadow-report",
+    "psychology",
+    "openai",
+    "supabase"
+  ],
   "author": "",
   "license": "ISC",
   "type": "module",
